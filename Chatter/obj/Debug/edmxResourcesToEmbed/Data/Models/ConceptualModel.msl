@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+  <Alias Key="Model" Value="ConceptualModel" />
+  <Alias Key="Target" Value="ConceptualModel.Store" />
+  <EntityContainerMapping CdmEntityContainer="ConceptualModelContainer" StorageEntityContainer="ConceptualModelStoreContainer">
+    <EntitySetMapping Name="Table1">
+      <EntityTypeMapping TypeName="ConceptualModel.Table1">
+        <MappingFragment StoreEntitySet="Table1">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
