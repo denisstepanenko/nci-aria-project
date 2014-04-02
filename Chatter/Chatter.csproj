@@ -142,6 +142,9 @@
     <Content Include="Scripts\angular-touch.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controllers\ctrl.home.js" />
+    <Content Include="Scripts\app\views\home.html" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
     <Content Include="Scripts\angular-sanitize.min.js.map" />
@@ -447,6 +450,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="API\DTOs\" />
+    <Folder Include="Scripts\app\directives\" />
+    <Folder Include="Scripts\app\models\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
