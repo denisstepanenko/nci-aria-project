@@ -15,9 +15,6 @@ namespace Chatter.Data.DAL
 
         protected ConceptualModelContainer DbContext;
 
-        public IQueryable<Table1> GetTable1Data()
-        {
-            return DbContext.Table1;    
-        }
+        
     }
 }

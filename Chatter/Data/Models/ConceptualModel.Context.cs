@@ -25,6 +25,7 @@ namespace Chatter.Data.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Table1> Table1 { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Friend> Friends { get; set; }
     }
 }

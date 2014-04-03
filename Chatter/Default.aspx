@@ -5,8 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" ng-app="chatterApp">
 <head runat="server">
     <title>Chatter</title>
-    <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="/Content/app/styles.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -35,12 +36,14 @@
     </div>
     <div ng-view></div>
 
-    <script src="Scripts/jquery-2.1.0.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="Scripts/angular.min.js"></script>
-    <script src="Scripts/angular-route.js"></script>
-    <script src="Scripts/app/app.js"></script>
-    <script src="Scripts/app/controllers/ctrl.home.js"></script>
+    <script src="/Scripts/jquery-2.1.0.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/angular.min.js"></script>
+    <script src="/Scripts/angular-route.js"></script>
+    <script src="/Scripts/app/app.js"></script>
+    <script src="/Scripts/app/controllers/ctrl.home.js"></script>
+    <script src="/Scripts/app/controllers/ctrl.login.js"></script>
+    <script src="/Scripts/app/controllers/ctrl.chat.js"></script>
     
 </body>
 </html>
