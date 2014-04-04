@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="4d46d482c06b4b1494caf02f8834622e" Name="Diagram1" ShowGrid="true" ZoomLevel="98" >
         <EntityTypeShape EntityType="ConceptualModel.User" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ConceptualModel.Friend" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ConceptualModel.Friend" Width="1.5" PointX="4.5" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

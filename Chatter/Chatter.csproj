@@ -418,7 +418,6 @@
     <Content Include="Scripts\jquery-2.1.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Controllers\Default1Controller.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Data\DAL\GenericController.cs" />
     <Compile Include="Data\Models\ConceptualModel.Context.cs">
@@ -436,7 +435,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConceptualModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Data\Models\Table1.cs">
+    <Compile Include="Data\Models\Friend.cs">
+      <DependentUpon>ConceptualModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Models\User.cs">
       <DependentUpon>ConceptualModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
@@ -461,6 +463,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="API\Controllers\" />
     <Folder Include="API\DTOs\" />
     <Folder Include="Scripts\app\directives\" />
     <Folder Include="Scripts\app\models\" />
