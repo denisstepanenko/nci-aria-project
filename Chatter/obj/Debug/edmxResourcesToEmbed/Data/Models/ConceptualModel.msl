@@ -3,10 +3,23 @@
   <Alias Key="Model" Value="ConceptualModel" />
   <Alias Key="Target" Value="ConceptualModel.Store" />
   <EntityContainerMapping CdmEntityContainer="ConceptualModelContainer" StorageEntityContainer="ConceptualModelStoreContainer">
-    <EntitySetMapping Name="Table1">
-      <EntityTypeMapping TypeName="ConceptualModel.Table1">
-        <MappingFragment StoreEntitySet="Table1">
-          <ScalarProperty Name="Description" ColumnName="Description" />
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="ConceptualModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ConnectionID" ColumnName="ConnectionID" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Nickname" ColumnName="Nickname" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Friends">
+      <EntityTypeMapping TypeName="ConceptualModel.Friend">
+        <MappingFragment StoreEntitySet="Friends">
+          <ScalarProperty Name="FriendUserID" ColumnName="FriendUserID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
