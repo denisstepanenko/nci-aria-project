@@ -3,6 +3,7 @@
   <EntityContainer Name="ConceptualModelContainer" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Users" EntityType="ConceptualModel.User" />
     <EntitySet Name="Friends" EntityType="ConceptualModel.Friend" />
+    <EntitySet Name="ChatHistories" EntityType="ConceptualModel.ChatHistory" />
   </EntityContainer>
   <EntityType Name="User">
     <Key>
@@ -22,5 +23,15 @@
     <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Type="Int32" Name="UserID" Nullable="false" />
     <Property Type="Int32" Name="FriendUserID" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChatHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Type="String" Name="Message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+    <Property Type="Int32" Name="SenderUserID" Nullable="false" />
+    <Property Type="Int32" Name="RecipientUserID" Nullable="false" />
   </EntityType>
 </Schema>

@@ -1,6 +1,5 @@
-﻿.friend-search .results {
-    border:1px solid;
-}
-.friend-search .results ul {
-    list-style:none;
+﻿.messages .scrollable{
+    overflow:scroll;
+    overflow-x:initial;
+    height:350px;    
 }

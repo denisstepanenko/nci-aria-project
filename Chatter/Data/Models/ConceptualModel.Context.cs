@@ -27,5 +27,6 @@ namespace Chatter.Data.Models
     
         public DbSet<User> Users { get; set; }
         public DbSet<Friend> Friends { get; set; }
+        public DbSet<ChatHistory> ChatHistories { get; set; }
     }
 }
