@@ -47,7 +47,8 @@
                                 <ul class="nav nav-pills nav-stacked">
                                     <li ng-repeat="friend in myFriends" ng-click="myFriendClick(friend)" ng-class="{active:activeFriend.id==friend.id}">
                                         <a class="name">{{friend.name}}
-                                        <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
+                                            <span class="remove-friend badge pull-right" ng-click="removeFriend(friend)">Remove</span>    
+                                            <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
                                         </a>
 
                                     </li>
