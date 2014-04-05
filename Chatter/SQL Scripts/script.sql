@@ -44,3 +44,17 @@ CREATE TABLE [dbo].[Friends]
     [UserID] INT NOT NULL, 
     [FriendUserID] INT NOT NULL
 )
+
+go
+
+CREATE TABLE [dbo].[ChatHistory] (
+    [Id]          INT           IDENTITY (1, 1) NOT NULL,
+    [Message]     VARCHAR (MAX) NOT NULL,
+    [CreatedDate] DATETIME      NOT NULL,
+    [SenderUserID] INT NOT NULL, 
+    [RecipientUserID] INT NOT NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+GO
+

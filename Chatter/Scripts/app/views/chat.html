@@ -1,4 +1,4 @@
-﻿<div ng-controller="ChatCtrl">
+﻿<div ng-controller="ChatCtrl" ng-init="init()">
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="container">
@@ -25,17 +25,17 @@
 
                     <!--My Friends-->
                     <div class="my-friends friend-search" ng-show="selectedTab==1">
-                        <div class="search ">
+                        <div class="search navbar-form ">
+                            <div class="form-group">
                             <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria" required ng-trim="true" />
-
+                            </div>
                             <button class="btn btn-default" ng-click="findMyFriend()">Find Friends</button>
                         </div>
                         <div class="results" ng-show="myFriends.length!=0">
                             <ul>
-                                <li ng-repeat="friend in myFriends">
+                                <li ng-repeat="friend in myFriends" ng-click="myFriendClick(friend)">
                                     <span class="name">{{friend.name}}</span>
                                     <a href="#" class="call-friend" ng-click="callFriend(friend)">Call</a>
-                                    <a href="#" class="text-friend" ng-click="textFriend(friend)">Text</a>
                                 </li>
                             </ul>
                         </div>
@@ -43,8 +43,10 @@
 
                     <!--Non-Friends Search-->
                     <div class="friend-search" ng-show="selectedTab==2">
-                        <div class="search ">
+                        <div class="search navbar-form ">
+                            <div class="form-group">
                             <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="friendSearchCriteria" required ng-trim="true" />
+                                </div>
 
                             <button class="btn btn-default" ng-click="findFriend()">Find Friends</button>
                         </div>
@@ -66,7 +68,25 @@
 
             <div class="col-md-4">
                 <!--CHAT AREA-->    
+                <div class="chat-area" ng-show="activeFriend">
+                    <div class="video">
+                        <label>{{activeFriend.name}}</label>
+                    </div>
 
+                    <div class="messages">
+                        <ul>
+                            <li ng-repeat="item in activeFriend.messageHistory">
+                                <span>{{item.message}}</span>
+                                <span>{{item.datePosted}}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="new-message">
+                        <textarea class="" ng-model="textMessage" required ng-trim="true"></textarea>
+                        <button ng-click="sendTextMessage()" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
                 
             </div>
             <div class="col-md-4">

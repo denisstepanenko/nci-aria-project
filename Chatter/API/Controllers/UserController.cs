@@ -14,7 +14,7 @@ namespace Chatter.API.Controllers
     {
         private ConceptualModelContainer db = new ConceptualModelContainer();
         private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
-        
+
         [HttpGet]
         public IEnumerable<object> FindFriend(string searchCriteria)
         {
@@ -40,7 +40,7 @@ namespace Chatter.API.Controllers
 
         [HttpPost]
         public void AddToFriends(AddToFriendsDTO data)
-        {            
+        {
             var friend = db.Friends.Where(f => f.FriendUserID == data.friendUserID && f.UserID == currentlyLoggedUserID).FirstOrDefault();
             if (friend == null)
             {
@@ -55,20 +55,46 @@ namespace Chatter.API.Controllers
             //return "";
         }
 
+        [HttpGet]
+        public IEnumerable<object> GetChatHistory(int friendUserID)
+        {
+            //cross-site scripting is handeled by AngularJS as it escapes HTML
+            var messages = from m in db.ChatHistories
+                           where m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID
+                           select new { message = m.Message, datePosted = m.CreatedDate };
+
+            return messages;
+        }
+
+        [HttpPost]
+        public void PostTextMessage(PostTextMessageDTO data)
+        {
+            var chatHistoryItem = new ChatHistory();
+            chatHistoryItem.Message = data.message;
+            chatHistoryItem.RecipientUserID = data.friendUserID;
+            chatHistoryItem.SenderUserID = currentlyLoggedUserID;
+            chatHistoryItem.CreatedDate = DateTime.Now;
+
+            db.ChatHistories.Add(chatHistoryItem);
+            db.SaveChanges();
+        }
+
+        #region "Private Stuff"
         private bool IsSearchCriteriaMatchToUser(string searchCriteria, User user)
         {
-            var check1 = searchCriteria.Contains(user.FirstName) 
-                || searchCriteria.Contains(user.LastName) 
-                || searchCriteria.Contains(user.Email) 
-                || searchCriteria.Contains(user.Nickname);
+            var check1 = searchCriteria.ToLower().Contains(user.FirstName.ToLower())
+                || searchCriteria.ToLower().Contains(user.LastName.ToLower())
+                || searchCriteria.ToLower().Contains(user.Email.ToLower())
+                || searchCriteria.ToLower().Contains(user.Nickname.ToLower());
 
-            var check2 = (user.FirstName != null && user.FirstName.Contains(searchCriteria))
-                || (user.LastName != null && user.LastName.Contains(searchCriteria))
-                || (user.Email != null && user.Email.Contains(searchCriteria))
-                || (user.Nickname != null && user.Nickname.Contains(searchCriteria));
+            var check2 = (user.FirstName != null && user.FirstName.ToLower().Contains(searchCriteria.ToLower()))
+                || (user.LastName != null && user.LastName.ToLower().Contains(searchCriteria.ToLower()))
+                || (user.Email != null && user.Email.ToLower().Contains(searchCriteria.ToLower()))
+                || (user.Nickname != null && user.Nickname.ToLower().Contains(searchCriteria.ToLower()));
 
             return check1 || check2;
         }
+        #endregion
 
     }
 }

@@ -6,9 +6,20 @@
     <edmx:StorageModels>
     <Schema Namespace="ConceptualModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ConceptualModelStoreContainer">
+          <EntitySet Name="ChatHistory" EntityType="ConceptualModel.Store.ChatHistory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Friends" EntityType="ConceptualModel.Store.Friends" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users" EntityType="ConceptualModel.Store.Users" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
+        <EntityType Name="ChatHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="varchar(max)" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="SenderUserID" Type="int" Nullable="false" />
+          <Property Name="RecipientUserID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Friends">
           <Key>
             <PropertyRef Name="Id" />
@@ -35,6 +46,7 @@
         <EntityContainer Name="ConceptualModelContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Users" EntityType="ConceptualModel.User" />
           <EntitySet Name="Friends" EntityType="ConceptualModel.Friend" />
+          <EntitySet Name="ChatHistories" EntityType="ConceptualModel.ChatHistory" />
         </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -54,6 +66,16 @@
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="UserID" Nullable="false" />
           <Property Type="Int32" Name="FriendUserID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChatHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="SenderUserID" Nullable="false" />
+          <Property Type="Int32" Name="RecipientUserID" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -80,6 +102,17 @@
               <MappingFragment StoreEntitySet="Friends">
                 <ScalarProperty Name="FriendUserID" ColumnName="FriendUserID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatHistories">
+            <EntityTypeMapping TypeName="ConceptualModel.ChatHistory">
+              <MappingFragment StoreEntitySet="ChatHistory">
+                <ScalarProperty Name="RecipientUserID" ColumnName="RecipientUserID" />
+                <ScalarProperty Name="SenderUserID" ColumnName="SenderUserID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
