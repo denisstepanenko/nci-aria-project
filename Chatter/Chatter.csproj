@@ -107,6 +107,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\chatter.css" />
     <Content Include="Content\jasmine\jasmine.css" />
     <Content Include="Content\jasmine\jasmine_favicon.png" />
     <Content Include="Default.aspx" />
@@ -150,8 +151,14 @@
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controllers\ctrl.chat.js" />
+    <Content Include="Scripts\app\controllers\ctrl.demo.js" />
     <Content Include="Scripts\app\controllers\ctrl.home.js" />
+    <Content Include="Scripts\app\controllers\ctrl.login.js" />
+    <Content Include="Scripts\app\views\chat.html" />
+    <Content Include="Scripts\app\views\demo.html" />
     <Content Include="Scripts\app\views\home.html" />
+    <Content Include="Scripts\app\views\login.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\errors.json" />
@@ -418,6 +425,8 @@
     <Content Include="Scripts\jquery-2.1.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Controllers\UserController.cs" />
+    <Compile Include="API\DTOs\AddToFriendsDTO.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Data\DAL\GenericController.cs" />
     <Compile Include="Data\Models\ConceptualModel.Context.cs">
@@ -463,8 +472,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="API\Controllers\" />
-    <Folder Include="API\DTOs\" />
     <Folder Include="Scripts\app\directives\" />
     <Folder Include="Scripts\app\models\" />
   </ItemGroup>
