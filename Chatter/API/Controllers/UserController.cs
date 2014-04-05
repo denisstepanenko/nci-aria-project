@@ -16,14 +16,16 @@ namespace Chatter.API.Controllers
         private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
 
         [HttpGet]
-        public IEnumerable<object> FindFriends(string searchCriteria, int skip = 0, int take = 20)
+        public object FindFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
         {
             var users = from u in db.Users.ToList()
                         let allowAddFriend = db.Friends.Where(f => f.UserID == currentlyLoggedUserID && f.FriendUserID == u.Id).Count() == 0
                         where IsSearchCriteriaMatchToUser(searchCriteria, u)
                         select new { name = u.FirstName + " " + u.LastName, allowAddFriend, id = u.Id };
 
-            return users.Skip(skip).Take(take); 
+            var result = new { totalItems = users.Count(), data = users.Skip((pageNumber - 1) * pageSize).Take(pageSize) };
+
+            return result;
         }
 
         [HttpGet]

@@ -11,7 +11,7 @@
     <div class="container">
         <!-- Example row of columns -->
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
 
                 <div class="friends">
                     <ul class="nav nav-tabs">
@@ -30,6 +30,11 @@
                             <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria" required ng-trim="true" />
                             </div>
                             <button class="btn btn-default" ng-click="findMyFriends()">Find Friends</button>
+                            <select class="form-control" ng-model="myFriendsPaginationData.itemsPerPage">
+                                <option selected="selected" value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
                         </div>
                         <div class="results" ng-show="myFriends.length!=0">
                             <ul>
@@ -40,11 +45,8 @@
                             </ul>
 
                             <div class="pager">
-                                <input type="number" ng-model="itemsPerPage" value="1" />
-                               
-
-
-                                <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxPageNumers" items-per-page="itemsPerPage" ng-change="pageChanged()" class="pagination-sm" boundary-links="true" rotate="false" ></pagination>
+                                
+                                <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"  ></pagination>
                             </div>
 
                         </div>
@@ -58,6 +60,11 @@
                                 </div>
 
                             <button class="btn btn-default" ng-click="findFriends()">Find Friends</button>
+                             <select class="form-control" ng-model="friendsPaginationData.itemsPerPage">
+                                <option selected="selected" value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
                         </div>
                         <div class="results" ng-show="friends.length!=0">
                             <ul>
@@ -66,6 +73,11 @@
                                     <a href="#" class="add-to-friends" ng-show="friend.allowAddFriend" ng-click="addToFriends(friend)">Add to Friends</a>
                                 </li>
                             </ul>
+
+                            <div class="pager">
+                                
+                                <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"  ></pagination>
+                            </div>
                         </div>
                     </div>
 
@@ -75,7 +87,7 @@
             </div>
 
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <!--CHAT AREA-->    
                 <div class="chat-area" ng-show="activeFriend">
                     <div class="video">

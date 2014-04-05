@@ -1,7 +1,27 @@
 ﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log', 
 	function ($scope, $http, $log) {
 	    $scope.friends = [];
+	    $scope.friendsPaginationData = {
+	        currentPage: 1,
+	        itemsPerPage: 10,
+	        totalItems: 0,
+	        maxPageNumers: 7,
+	        pageChanged: function () {
+	            $scope.findFriends();
+	        }
+	    };
+
 	    $scope.myFriends = [];
+	    $scope.myFriendsPaginationData = {
+	        currentPage: 1,
+	        itemsPerPage: 10,
+	        totalItems: 0,
+	        maxPageNumers: 7,
+	        pageChanged: function () {
+	            $scope.findMyFriends();
+	        }
+	    };
+
 	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
         
@@ -10,8 +30,15 @@
 	    }
 	    
 	    $scope.findFriends = function () {	        
-	        $http.get("/api/user/FindFriends", { params: { searchCriteria: $scope.friendSearchCriteria } }).success(function (data) {
-	            $scope.friends = data;
+	        $http.get("/api/user/FindFriends", {
+	            params: {
+	                searchCriteria: $scope.friendSearchCriteria,
+	                pageNumber: $scope.friendsPaginationData.currentPage,
+	                pageSize: $scope.friendsPaginationData.itemsPerPage
+	            }
+	        }).success(function (data) {
+	            $scope.friends = data.data;
+	            $scope.friendsPaginationData.totalItems = data.totalItems;
 	        });
 	    }
 
@@ -22,12 +49,12 @@
 	        $http.get("/api/user/FindMyFriends", {
 	            params: {
 	                searchCriteria: criteria,
-	                pageNumber: $scope.bigCurrentPage,
-	                pageSize: $scope.itemsPerPage
+	                pageNumber: $scope.myFriendsPaginationData.currentPage,
+	                pageSize: $scope.myFriendsPaginationData.itemsPerPage
 	            }
 	        }).success(function (data) {
 	            $scope.myFriends = data.data;
-	            $scope.bigTotalItems = data.totalItems;
+	            $scope.myFriendsPaginationData.totalItems = data.totalItems;
 	        });
 	    }
         
@@ -78,14 +105,14 @@
 
 
                 	   
-	    $scope.itemsPerPage = 2;
+	    //$scope.itemsPerPage = 2;
 
-	    $scope.maxPageNumers = 7;
-	    $scope.bigTotalItems = 127;
-	    $scope.bigCurrentPage = 1;//TODO: use $scope.$watch to react when this is changed, OR on-select-page="setPage(page)"
+	    //$scope.myFriendsPaginationData.maxPageNumers = 7;
+	    //$scope.myFriendsPaginationData.bigTotalItems = 127;
+	    //$scope.myFriendsPaginationData.bigCurrentPage = 1;//TODO: use $scope.$watch to react when this is changed, OR on-select-page="setPage(page)"
         
-	    $scope.pageChanged = function () {
-	        $scope.findMyFriends();
-	    }
+	    //$scope.myFriendsPaginationData.pageChanged = function () {
+	    //    $scope.findMyFriends();
+	    //}
               
 	}]);
