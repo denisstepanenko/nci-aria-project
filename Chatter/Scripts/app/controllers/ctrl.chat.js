@@ -105,6 +105,10 @@
             
 	    }
 
+	    $scope.removeFriend = function (friend) {
+
+	    }
+
 	    $scope.sendTextMessage = function () {
 	        if ($(".new-message textarea").val().trim()!="") {
 	            postChatHistory($scope.textMessage);
