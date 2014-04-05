@@ -13,111 +13,135 @@
         <div class="row">
             <div class="col-md-5">
 
-                <div class="friends">
-                    <ul class="nav nav-tabs">
-                        <li class="active" ng-class="{active:selectedTab==1}">
-                            <a href="#" ng-click="friendsTabClick(1)">My Friends</a>
-                        </li>
-                        <li ng-class="{active:selectedTab==2}">
-                            <a href="#" ng-click="friendsTabClick(2)">Find Friends</a>
-                        </li>
-                    </ul>
-
-                    <!--My Friends-->
-                    <div class="my-friends friend-search" ng-show="selectedTab==1">
-                        <div class="search navbar-form ">
-                            <div class="form-group">
-                            <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria" required ng-trim="true" />
+                <div class="friends panel panel-default">
+                    <div class="">
+                        <div class="navbar navbar-default">
+                            <div class="container">
+                                <ul class="nav navbar-nav">
+                                    <li class="active" ng-class="{active:selectedTab==1}">
+                                        <a href="#" ng-click="friendsTabClick(1)">My Friends</a>
+                                    </li>
+                                    <li ng-class="{active:selectedTab==2}">
+                                        <a href="#" ng-click="friendsTabClick(2)">Find Friends</a>
+                                    </li>
+                                </ul>
                             </div>
-                            <button class="btn btn-default" ng-click="findMyFriends()">Find Friends</button>
-                            <select class="form-control" ng-model="myFriendsPaginationData.itemsPerPage">
-                                <option selected="selected" value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                        <div class="results" ng-show="myFriends.length!=0">
-                            <ul>
-                                <li ng-repeat="friend in myFriends" ng-click="myFriendClick(friend)">
-                                    <span class="name">{{friend.name}}</span>
-                                    <a href="#" class="call-friend" ng-click="callFriend(friend)">Call</a>
-                                </li>
-                            </ul>
-
-                            <div class="pager">
-                                
-                                <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"  ></pagination>
-                            </div>
-
                         </div>
                     </div>
 
-                    <!--Non-Friends Search-->
-                    <div class="friend-search" ng-show="selectedTab==2">
-                        <div class="search navbar-form ">
-                            <div class="form-group">
-                            <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="friendSearchCriteria" required ng-trim="true" />
+                    <div class="panel-body">
+                        <!--My Friends-->
+                        <div class="my-friends friend-search" ng-show="selectedTab==1">
+                            <div class="search navbar-form ">
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria"  ng-trim="true" />
+                                </div>
+                                <button class="btn btn-default" ng-click="findMyFriends()">Find Friends</button>
+                                <select class="form-control" ng-model="myFriendsPaginationData.itemsPerPage">
+                                    <option selected="selected" value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                            <div class="results" ng-show="myFriends.length!=0">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li ng-repeat="friend in myFriends" ng-click="myFriendClick(friend)" ng-class="{active:activeFriend.id==friend.id}">
+                                        <a class="name">{{friend.name}}
+                                        <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
+                                        </a>
+
+                                    </li>
+                                </ul>
+
+                                <div class="pager">
+                                    <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
                                 </div>
 
-                            <button class="btn btn-default" ng-click="findFriends()">Find Friends</button>
-                             <select class="form-control" ng-model="friendsPaginationData.itemsPerPage">
-                                <option selected="selected" value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="50">50</option>
-                            </select>
+                            </div>
                         </div>
-                        <div class="results" ng-show="friends.length!=0">
-                            <ul>
-                                <li ng-repeat="friend in friends">
-                                    <span class="name">{{friend.name}}</span>
-                                    <a href="#" class="add-to-friends" ng-show="friend.allowAddFriend" ng-click="addToFriends(friend)">Add to Friends</a>
-                                </li>
-                            </ul>
 
-                            <div class="pager">
-                                
-                                <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"  ></pagination>
+                        <!--Non-Friends Search-->
+                        <div class="friend-search" ng-show="selectedTab==2">
+                            <div class="search navbar-form ">
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="friendSearchCriteria"  ng-trim="true" />
+                                </div>
+
+                                <button class="btn btn-default" ng-click="findFriends()">Find Friends</button>
+                                <select class="form-control" ng-model="friendsPaginationData.itemsPerPage">
+                                    <option selected="selected" value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                            <div class="results" ng-show="friends.length!=0">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li ng-repeat="friend in friends">
+                                        <a class="name">{{friend.name}}
+                                            <span class="add-to-friends badge pull-right" ng-show="friend.allowAddFriend" ng-click="addToFriends(friend)">Add to Friends</span>
+                                        </a>                                        
+                                    </li>
+                                </ul>
+
+                                <div class="pager">
+                                    <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    
                 </div>
-                                
+
             </div>
 
 
-            <div class="col-md-3">
-                <!--CHAT AREA-->    
+            <div class="col-md-5">
+                <!--CHAT AREA-->
+
                 <div class="chat-area" ng-show="activeFriend">
-                    <div class="video">
-                        <label>{{activeFriend.name}}</label>
+                    <div class="friends panel panel-default">
+                        <div class="panel-heading">Chat History:
+                            <label>{{activeFriend.name}}</label></div>
+                        <div class="video">
+                        </div>
+
+                        <div class="messages">
+                            <div class="list-group">
+                                <div class="scrollable">
+                                    <a class="list-group-item" ng-repeat="item in activeFriend.messageHistory">
+                                        <div>
+                                            <span class="badge pull-left">{{item.senderName}}</span>
+                                            <span class="badge pull-right">{{item.datePosted}}</span>
+                                        </div>
+                                        <br />
+                                        <p>{{item.message}}</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="pager">
+                                <pagination total-items="chatHistoryPaginationData.totalItems" ng-model="chatHistoryPaginationData.currentPage" 
+                                    max-size="chatHistoryPaginationData.maxPageNumers" items-per-page="chatHistoryPaginationData.itemsPerPage" 
+                                    ng-change="chatHistoryPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
+                            </div>
+                        </div>
+
+
                     </div>
 
-                    <div class="messages">
-                        <ul>
-                            <li ng-repeat="item in activeFriend.messageHistory">
-                                <span>{{item.message}}</span>
-                                <span>{{item.datePosted}}</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="new-message">
-                        <textarea class="" ng-model="textMessage" required ng-trim="true"></textarea>
-                        <button ng-click="sendTextMessage()" class="btn btn-primary">Send</button>
+                    <div class="friends panel panel-default">
+                        <div class="panel-heading">New Message</label></div>
+                        <div class="new-message form-group">
+                            <textarea class="form-control validate[required]" rows="3" ng-model="textMessage"  ng-trim="true"></textarea>
+                            <button ng-click="sendTextMessage()" class="form-control btn btn-primary pull-right">Send</button>
+                        </div>
                     </div>
                 </div>
-                
             </div>
-            <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div>
+
         </div>
 
-        
+
 
         <hr>
 

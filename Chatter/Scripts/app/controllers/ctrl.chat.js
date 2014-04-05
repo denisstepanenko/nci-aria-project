@@ -22,11 +22,24 @@
 	        }
 	    };
 
+	    $scope.chatHistoryPaginationData = {
+	        currentPage: 1,
+	        itemsPerPage: 10,
+	        totalItems: 0,
+	        maxPageNumers: 7,
+	        pageChanged: function () {
+	            $scope.getChatHistory();
+	        }
+	    };
+
 	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
         
 	    $scope.init = function () {
 	        $scope.findMyFriends();
+	        $(function () {
+
+	        });
 	    }
 	    
 	    $scope.findFriends = function () {	        
@@ -68,25 +81,41 @@
 	    $scope.myFriendClick = function (friend) {
 	        $scope.activeFriend = friend;
 
+	        $scope.getChatHistory();
+	    }
+
+	    $scope.getChatHistory = function () {
 	        //get chat history
-	        $http.get("/api/user/getChatHistory", { params: { friendUserID: $scope.activeFriend.id } }).success(function (data) {
-	            $scope.activeFriend.messageHistory = data;
+	        $http.get("/api/user/getChatHistory", {
+	            params: {
+	                friendUserID: $scope.activeFriend.id,
+	                pageNumber: $scope.chatHistoryPaginationData.currentPage,
+	                pageSize: $scope.chatHistoryPaginationData.itemsPerPage
+	            }
+	        }).success(function (data) {
+	            $scope.activeFriend.messageHistory = data.data;
+	            $scope.chatHistoryPaginationData.totalItems = data.totalItems;
 	        });
 	    }
 
 	    $scope.callFriend = function (friend) {
 	        $scope.myFriendClick(friend);
 
-            //send the call request:TODO
+	        //send the call request:TODO
+            
 	    }
 
-	    $scope.sendTextMessage = function () { 
-	        postChatHistory($scope.textMessage);
-	                    
-	        //TODO: send message using peerjs
-	        $scope.activeFriend.messageHistory.push({ message: $scope.textMessage, datePosted: new Date() });
+	    $scope.sendTextMessage = function () {
+	        if ($(".new-message textarea").val().trim()!="") {
+	            postChatHistory($scope.textMessage);
 
-	        $scope.textMessage = "";
+	            //TODO: send message using peerjs
+	            $scope.activeFriend.messageHistory.push({ message: $scope.textMessage, datePosted: (new Date()).toDateString(), senderName: "me" });
+
+	            $scope.textMessage = "";
+	            $(".messages .scrollable").scrollTop($(document).height());
+	            
+	        }
 	    }
 
 	    var postChatHistory = function (message) {
@@ -104,15 +133,5 @@
 	    }
 
 
-                	   
-	    //$scope.itemsPerPage = 2;
-
-	    //$scope.myFriendsPaginationData.maxPageNumers = 7;
-	    //$scope.myFriendsPaginationData.bigTotalItems = 127;
-	    //$scope.myFriendsPaginationData.bigCurrentPage = 1;//TODO: use $scope.$watch to react when this is changed, OR on-select-page="setPage(page)"
-        
-	    //$scope.myFriendsPaginationData.pageChanged = function () {
-	    //    $scope.findMyFriends();
-	    //}
               
 	}]);

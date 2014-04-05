@@ -58,15 +58,23 @@ namespace Chatter.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<object> GetChatHistory(int friendUserID, int skip = 0, int take = 20)
+        public object GetChatHistory(int friendUserID, int pageNumber = 1, int pageSize = 20)
         {
             //cross-site scripting is handeled by AngularJS as it escapes HTML
-            var messages = from m in db.ChatHistories
-                           where m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID
-                           orderby m.CreatedDate descending
-                           select new { message = m.Message, datePosted = m.CreatedDate };
+            var data1 = from m in db.ChatHistories                        
+                        where m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID
+                        orderby m.CreatedDate descending
+                        select m;
 
-            return messages.Skip(skip).Take(take);
+            var messages = from d in data1.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList()
+                           join su in db.Users on d.SenderUserID equals su.Id
+                           let senderName = su.Id == currentlyLoggedUserID ? "me" : su.FirstName + " " + su.LastName
+                           orderby d.CreatedDate ascending
+                           select new { message = d.Message, datePosted = d.CreatedDate.ToString("dd MMM")+" at "+d.CreatedDate.ToString("HH:mm:ss"), senderName };
+
+            var result = new { totalItems = data1.Count(), data = messages };
+
+            return result;
         }
 
         [HttpPost]
