@@ -24,5 +24,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="ChatHistories">
+      <EntityTypeMapping TypeName="ConceptualModel.ChatHistory">
+        <MappingFragment StoreEntitySet="ChatHistory">
+          <ScalarProperty Name="RecipientUserID" ColumnName="RecipientUserID" />
+          <ScalarProperty Name="SenderUserID" ColumnName="SenderUserID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -29,7 +29,7 @@
                             <div class="form-group">
                             <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria" required ng-trim="true" />
                             </div>
-                            <button class="btn btn-default" ng-click="findMyFriend()">Find Friends</button>
+                            <button class="btn btn-default" ng-click="findMyFriends()">Find Friends</button>
                         </div>
                         <div class="results" ng-show="myFriends.length!=0">
                             <ul>
@@ -38,6 +38,15 @@
                                     <a href="#" class="call-friend" ng-click="callFriend(friend)">Call</a>
                                 </li>
                             </ul>
+
+                            <div class="pager">
+                                <input type="number" ng-model="itemsPerPage" value="1" />
+                               
+
+
+                                <pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxPageNumers" items-per-page="itemsPerPage" ng-change="pageChanged()" class="pagination-sm" boundary-links="true" rotate="false" ></pagination>
+                            </div>
+
                         </div>
                     </div>
 
@@ -48,7 +57,7 @@
                             <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="friendSearchCriteria" required ng-trim="true" />
                                 </div>
 
-                            <button class="btn btn-default" ng-click="findFriend()">Find Friends</button>
+                            <button class="btn btn-default" ng-click="findFriends()">Find Friends</button>
                         </div>
                         <div class="results" ng-show="friends.length!=0">
                             <ul>

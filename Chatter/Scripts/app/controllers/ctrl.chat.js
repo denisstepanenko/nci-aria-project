@@ -1,33 +1,40 @@
-﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log',
+﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log', 
 	function ($scope, $http, $log) {
 	    $scope.friends = [];
 	    $scope.myFriends = [];
-	    $scope.selectedTab = 1;//2=friend search, 1=my friends search
+	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
-
+        
 	    $scope.init = function () {
-	        $scope.findMyFriend();
+	        $scope.findMyFriends();
 	    }
 	    
-	    $scope.findFriend = function () {	        
-	        $http.get("/api/user/FindFriend", { params: { searchCriteria: $scope.friendSearchCriteria } }).success(function (data) {
+	    $scope.findFriends = function () {	        
+	        $http.get("/api/user/FindFriends", { params: { searchCriteria: $scope.friendSearchCriteria } }).success(function (data) {
 	            $scope.friends = data;
 	        });
 	    }
 
-	    $scope.findMyFriend = function () {
+	    $scope.findMyFriends = function () {
 	        //search for users matching the search criteria
 	        var criteria = !$scope.myFriendSearchCriteria || $scope.myFriendSearchCriteria.toString().trim() == "" ? "all" : $scope.myFriendSearchCriteria;
 
-	        $http.get("/api/user/FindMyFriends", { params: { searchCriteria: criteria } }).success(function (data) {
-	            $scope.myFriends = data;
+	        $http.get("/api/user/FindMyFriends", {
+	            params: {
+	                searchCriteria: criteria,
+	                pageNumber: $scope.bigCurrentPage,
+	                pageSize: $scope.itemsPerPage
+	            }
+	        }).success(function (data) {
+	            $scope.myFriends = data.data;
+	            $scope.bigTotalItems = data.totalItems;
 	        });
 	    }
         
 	    $scope.addToFriends = function (user) {
 	        $http.post("/api/user/addToFriends", { friendUserID: user.id }).success(function (data) {
 	            //repopulate friends list so that the "add friend" button is not shown anymore as the friend is already added
-	            $scope.findFriend($scope.searchCriteria);
+	            $scope.findFriends($scope.searchCriteria);
 	        });	       
 	    }
 
@@ -69,5 +76,16 @@
 	        $scope.selectedTab = tabID;
 	    }
 
+
+                	   
+	    $scope.itemsPerPage = 2;
+
+	    $scope.maxPageNumers = 7;
+	    $scope.bigTotalItems = 127;
+	    $scope.bigCurrentPage = 1;//TODO: use $scope.$watch to react when this is changed, OR on-select-page="setPage(page)"
+        
+	    $scope.pageChanged = function () {
+	        $scope.findMyFriends();
+	    }
               
 	}]);

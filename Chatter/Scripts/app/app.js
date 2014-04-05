@@ -1,5 +1,5 @@
 ﻿var chatterApp = angular.module('chatterApp', ['ngRoute', 'controllers']);
-var controllers = angular.module('controllers', []);
+var controllers = angular.module('controllers', ['ui.bootstrap']);
 
 chatterApp.config(['$locationProvider', '$routeProvider',
   function ($locationProvider, $routeProvider) {

@@ -40,6 +40,8 @@
     <script src="/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/Scripts/angular.min.js"></script>
     <script src="/Scripts/angular-route.js"></script>
+    <script src="/Scripts/ui-bootstrap-tpls-0.10.0.min.js"></script>
+    <script src="/Scripts/pagination.js"></script>
     <script src="/Scripts/app/app.js"></script>
     <script src="/Scripts/app/controllers/ctrl.home.js"></script>
     <script src="/Scripts/app/controllers/ctrl.login.js"></script>
