@@ -26,10 +26,13 @@
 	    chat.client.incomingTextMessage = function (message) {
 	        //the recipient should handle incoming text message request here
 	        alert(message);
-
-	        //$scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: "me" });
+            
 	        //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
-	        //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server.
+
+            if ($scope.activeFriend) {
+                //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
+                $scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: activeFriend.name });
+            }        	        
 	    }
 
 	    var localPeerID;
@@ -78,13 +81,13 @@
 	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
 	    $scope.activeCallUser;//this is the ID of the user who's currently on a call
-	            
+	    
 	    $scope.init = function () {
 	        $scope.findMyFriends();
                     
 	        $(function () {
-
-	        });	        
+	            initializeBrowserVideo();
+	        });
 	    }
 	    
 	    $scope.findFriends = function () {	        
@@ -168,10 +171,11 @@
 	    }
 
 	    $scope.endCall = function () {
-	        window.existingCall.close();
-	        $scope.activeCallUser = null;
+	        if (window.existingCall) {
+	            window.existingCall.close();
+	        }
 
-	        step2();
+	        $scope.activeCallUser = null;
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -242,57 +246,48 @@
 	        step3(call);
 	    });
 
-	    peer.on('error', function (err) {
-	        alert(err.message);
-	        //TODO: add error notification
+	    peer.on('error', function (err) {	        
+	        console.log(err.message);
+	        $scope.videoError = "Error ocurred, please try again...";
 	    });
-
-	    // Click handlers setup
-	    $(function () {                         
-	        // Retry if getUserMedia fails
-	        $('#step1-retry').click(function () {
-	            $('#step1-error').hide();
-	            step1();
-	        });
-
-	        // Get things started
-	        step1();
-	    });
-
-	    function step1() {
+        
+	    function initializeBrowserVideo() {
 	        // Get audio/video stream
 	        navigator.getUserMedia({ audio: true, video: true }, function (stream) {
 	            // Set your video displays
 	            $('#my-video').prop('src', URL.createObjectURL(stream));
 
-	            window.localStream = stream;
-	            step2();
+	            window.localStream = stream;	            
 	        }, function () {
-	            $('#step1-error').show();
+	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
 	        });
 	    }
 
-	    function step2() {
-	        $('#step1, #step3').hide();
-	        $('#step2').show();
-	    }
-
 	    function step3(call) {
+	        $scope.videoError = "";
+
 	        // Hang up on an existing call if present
 	        if (window.existingCall) {
 	            window.existingCall.close();
 	        }
 
-	        // Wait for stream on the call, then set peer video display
-	        call.on('stream', function (stream) {
-	            $('#their-video').prop('src', URL.createObjectURL(stream));
-	        });
+            //call could be null if the user didn't allow to use the webcam in the browser
+	        if (call) {
+	            // Wait for stream on the call, then set peer video display
+	            call.on('stream', function (stream) {
+	                $('#their-video').prop('src', URL.createObjectURL(stream));
+	            });
 
-	        // UI stuff
-	        window.existingCall = call;
-	        call.on('close', function () {
-	            //TODO: add call ended notification
-	        });
+	            // UI stuff
+	            window.existingCall = call;
+	            call.on('close', function () {
+	                //TODO: add call ended notification
+	            });
+	        }
+	        else {
+	            //informs the user that they have to allow the use of webcam through the browser
+	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
+	        }
 	    }
         //END PEERJS STUFF
 	}]);

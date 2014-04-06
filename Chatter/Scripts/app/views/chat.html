@@ -111,10 +111,10 @@
                         
                         <div class="video">
                             <!-- Video area -->
-                            <div class="" id="video-container" ng-show="activeCallUser">
-                                <div id="step1-error">
-                                    <p>Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.</p>
-                                    <a href="#" class="pure-button pure-button-error" id="step1-retry">Try again</a>
+                            <div class="" id="video-container" ng-show="activeCallUser">                           
+                                <div class="alert alert-danger" ng-show="videoError" >
+                                    {{videoError}}
+                                    <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
                                 </div>
 
                                 <video id="their-video" autoplay></video>
@@ -122,7 +122,7 @@
 
                             </div>
 
-                            <button class="btn btn-default" ng-click="callFriend(activeFriend)">Call</button>
+                            <button class="btn btn-default" ng-click="callFriend(activeFriend)">Call</button>                            
                             <button class="btn btn-default" ng-click="endCall()">End Call</button>
                         </div>
 
