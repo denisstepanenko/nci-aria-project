@@ -15,6 +15,8 @@ namespace Chatter.API.Controllers
         private ConceptualModelContainer db = new ConceptualModelContainer();
         private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
 
+        //TODO: ensure that findFriend functions don't return the currently logged in user
+
         [HttpGet]
         public object FindFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
         {
@@ -76,7 +78,8 @@ namespace Chatter.API.Controllers
         {
             //cross-site scripting is handeled by AngularJS as it escapes HTML
             var data1 = from m in db.ChatHistories                        
-                        where m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID
+                        where (m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID)
+                        || (m.RecipientUserID == currentlyLoggedUserID && m.SenderUserID == friendUserID)
                         orderby m.CreatedDate descending
                         select m;
 

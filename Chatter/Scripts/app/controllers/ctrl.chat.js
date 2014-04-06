@@ -1,5 +1,44 @@
 ﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log', 
 	function ($scope, $http, $log) {
+	    //PRIVATE STUFF
+	    var postChatHistory = function (message) {
+            //TODO:move this logic into SignalR hub
+	        //posts the message
+	        $http.post("/api/user/postTextMessage", {
+	            friendUserID: $scope.activeFriend.id,
+	            message: message
+	        }).success(function (data) {
+	            //do nothing as this is "fire and forget" post, used just for history 
+	        });
+	    }
+
+	    var chat = $.connection.chatHub;
+	    chat.client.incomingCall = function (destPeerID) {
+	        //the call recipient should handle incoming call request here
+	        if (confirm("Incomming call, answer? (" + destPeerID + ")")) {
+	            // Initiate a call!
+	            var call = peer.call(destPeerID, window.localStream);
+
+	            step3(call);
+	        }
+	    }
+
+	    chat.client.incomingTextMessage = function (message) {
+	        //the recipient should handle incoming text message request here
+	        alert(message);
+	    }
+
+	    var localPeerID;
+        
+	    // Start the connection.
+	    $.connection.hub.start().done(function () {	        
+	        chat.server.imOnline();
+	    }).fail(function (e1,e2,e3,e4) {
+	        debugger;
+	    });
+
+	    //END PRIVATE STUFF
+
 	    $scope.friends = [];
 	    $scope.friendsPaginationData = {
 	        currentPage: 1,
@@ -34,12 +73,13 @@
 
 	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
-        
+	            
 	    $scope.init = function () {
 	        $scope.findMyFriends();
+                    
 	        $(function () {
 
-	        });
+	        });	        
 	    }
 	    
 	    $scope.findFriends = function () {	        
@@ -98,11 +138,9 @@
 	        });
 	    }
 
-	    $scope.callFriend = function (friend) {
-	        $scope.myFriendClick(friend);
-
-	        //send the call request:TODO
-            
+	    $scope.callFriend = function (friend) {            
+	        //send the call request
+	        chat.server.callRequest(friend.id, localPeerID);
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -125,25 +163,16 @@
 	        if ($(".new-message textarea").val().trim()!="") {
 	            postChatHistory($scope.textMessage);
 
-	            //TODO: send message using peerjs
+	            //send message using SignalR
+	            chat.server.sendTextMessage($scope.activeFriend.id, $scope.textMessage);
+                
 	            $scope.activeFriend.messageHistory.push({ message: $scope.textMessage, datePosted: (new Date()).toDateString(), senderName: "me" });
 
 	            $scope.textMessage = "";
-	            $(".messages .scrollable").scrollTop($(document).height());
-	            
+	            $(".messages .scrollable").scrollTop($(document).height());	            
 	        }
 	    }
 
-	    var postChatHistory = function (message) {
-	        //posts the message
-	        $http.post("/api/user/postTextMessage", {
-	            friendUserID: $scope.activeFriend.id,
-	            message: message
-	        }).success(function (data) {	            
-	            //do nothing as this is "fire and forget" post, used just for history 
-	        });	        
-	    }
-        
 	    $scope.friendsTabClick = function (tabID) {
 	        $scope.selectedTab = tabID;
 
@@ -151,6 +180,11 @@
                 //reloading myFriends list
 	            $scope.findMyFriends();
 	        }
+	    }
+
+	    $scope.endCall = function () {
+	        window.existingCall.close();
+	        step2();
 	    }
 
 
@@ -169,35 +203,24 @@
 	    });
 
 	    peer.on('open', function () {
-	        $('#my-id').text(peer.id);
+	        localPeerID = peer.id;
 	    });
 
 	    // Receiving a call
 	    peer.on('call', function (call) {
-	        // Answer the call automatically (instead of prompting user) for demo purposes
+	        // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
 	        call.answer(window.localStream);
+
 	        step3(call);
 	    });
+
 	    peer.on('error', function (err) {
 	        alert(err.message);
-	        // Return to step 2 if error occurs
-	        step2();
+	        //TODO: add error notification
 	    });
 
 	    // Click handlers setup
-	    $(function () {
-	        $('#make-call').click(function () {
-	            // Initiate a call!
-	            var call = peer.call($('#callto-id').val(), window.localStream);
-
-	            step3(call);
-	        });
-
-	        $('#end-call').click(function () {
-	            window.existingCall.close();
-	            step2();
-	        });
-
+	    $(function () {                         
 	        // Retry if getUserMedia fails
 	        $('#step1-retry').click(function () {
 	            $('#step1-error').hide();
@@ -216,7 +239,9 @@
 
 	            window.localStream = stream;
 	            step2();
-	        }, function () { $('#step1-error').show(); });
+	        }, function () {
+	            $('#step1-error').show();
+	        });
 	    }
 
 	    function step2() {
@@ -237,10 +262,9 @@
 
 	        // UI stuff
 	        window.existingCall = call;
-	        $('#their-id').text(call.peer);
-	        call.on('close', step2);
-	        $('#step1, #step2').hide();
-	        $('#step3').show();
+	        call.on('close', function () {
+	            //TODO: add call ended notification
+	        });
 	    }
         //END PEERJS STUFF
 	}]);

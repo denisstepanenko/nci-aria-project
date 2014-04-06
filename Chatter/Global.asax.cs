@@ -15,6 +15,9 @@ namespace Chatter
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
+            // Register the default hubs route: ~/signalr/hubs
+            //RouteTable.Routes.MapHubs();
+
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(
                 new QueryStringMapping("type", "json", new MediaTypeHeaderValue("application/json")));
 
