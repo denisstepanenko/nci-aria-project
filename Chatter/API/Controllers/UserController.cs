@@ -57,6 +57,20 @@ namespace Chatter.API.Controllers
             }
         }
 
+        [HttpDelete]
+        public void RemoveFriend(int friendUserID)
+        {
+            var friend = (from f in db.Friends
+                          where f.UserID == currentlyLoggedUserID && f.FriendUserID == friendUserID
+                          select f).FirstOrDefault();
+
+            if (friend != null)
+            {
+                db.Friends.Remove(friend);
+                db.SaveChanges();
+            }
+        }
+
         [HttpGet]
         public object GetChatHistory(int friendUserID, int pageNumber = 1, int pageSize = 20)
         {

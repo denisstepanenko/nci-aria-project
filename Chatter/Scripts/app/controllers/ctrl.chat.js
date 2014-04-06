@@ -106,7 +106,17 @@
 	    }
 
 	    $scope.removeFriend = function (friend) {
-
+	        $http.delete("/api/user/removeFriend", {
+	            params: {
+	                friendUserID: friend.id
+	            }
+	        }).success(function () {
+                //removing from the array once removed fromthe DB (avoiding reload)
+	            var idx = $scope.myFriends.indexOf(friend);
+	            if (idx >= 0) {
+	                $scope.myFriends.splice(idx, 1);
+	            }
+	        });
 	    }
 
 	    $scope.sendTextMessage = function () {
@@ -134,6 +144,11 @@
         
 	    $scope.friendsTabClick = function (tabID) {
 	        $scope.selectedTab = tabID;
+
+	        if ($scope.selectedTab == 1) {
+                //reloading myFriends list
+	            $scope.findMyFriends();
+	        }
 	    }
 
 
