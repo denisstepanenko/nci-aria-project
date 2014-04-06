@@ -19,10 +19,10 @@
                             <div class="container">
                                 <ul class="nav navbar-nav">
                                     <li class="active" ng-class="{active:selectedTab==1}">
-                                        <a href="#" ng-click="friendsTabClick(1)">My Friends</a>
+                                        <a href="" ng-click="friendsTabClick(1)">My Friends</a>
                                     </li>
                                     <li ng-class="{active:selectedTab==2}">
-                                        <a href="#" ng-click="friendsTabClick(2)">Find Friends</a>
+                                        <a href="" ng-click="friendsTabClick(2)">Find Friends</a>
                                     </li>
                                 </ul>
                             </div>
@@ -49,6 +49,7 @@
                                         <a class="name">{{friend.name}}
                                             <span class="remove-friend badge pull-right" ng-click="removeFriend(friend)">Remove</span>    
                                             <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
+                                            <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Video Call</span>
                                         </a>
 
                                     </li>
@@ -102,8 +103,17 @@
                 <div class="chat-area" ng-show="activeFriend">
                     <div class="friends panel panel-default">
                         <div class="panel-heading">Chat History:
-                            <label>{{activeFriend.name}}</label></div>
+                            <label>{{activeFriend.name}}</label>
+                        </div>
+                        
                         <div class="video">
+                            <!-- Video area -->
+                            <div class="pure-u-2-3" id="video-container">
+                                <video id="their-video" autoplay></video>
+                                <video id="my-video" muted="true" autoplay></video>
+
+                                
+                            </div>
                         </div>
 
                         <div class="messages">

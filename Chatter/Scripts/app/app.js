@@ -3,7 +3,7 @@ var controllers = angular.module('controllers', ['ui.bootstrap']);
 
 chatterApp.config(['$locationProvider', '$routeProvider',
   function ($locationProvider, $routeProvider) {
-      $locationProvider.html5Mode(true);
+      $locationProvider.html5Mode(false);
 
       $routeProvider.
         //when('/', {
