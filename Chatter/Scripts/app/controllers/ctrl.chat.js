@@ -26,6 +26,10 @@
 	    chat.client.incomingTextMessage = function (message) {
 	        //the recipient should handle incoming text message request here
 	        alert(message);
+
+	        //$scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: "me" });
+	        //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
+	        //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server.
 	    }
 
 	    var localPeerID;
@@ -73,6 +77,7 @@
 
 	    $scope.selectedTab = 1;// 1=my friends search, 2=friend search,
 	    $scope.activeFriend;//this is the currently selected friend
+	    $scope.activeCallUser;//this is the ID of the user who's currently on a call
 	            
 	    $scope.init = function () {
 	        $scope.findMyFriends();
@@ -139,8 +144,34 @@
 	    }
 
 	    $scope.callFriend = function (friend) {            
+	        if ($scope.activeCallUser) {
+	            if ($scope.activeCallUser.id == friend.id) {
+	                //user is trying to call the friend that they're currently talking to
+	                return;
+	            }
+	            else {
+	                //user is trying to call another friend while on a call, confirm first
+	                if (confirm("Current call with '" + $scope.activeCallUser.name + "' will be ended")) {
+	                    $scope.endCall();
+	                }
+	                else {
+	                    return;
+	                }
+	            }
+	            
+	        }
+
 	        //send the call request
 	        chat.server.callRequest(friend.id, localPeerID);
+
+	        $scope.activeCallUser = friend;
+	    }
+
+	    $scope.endCall = function () {
+	        window.existingCall.close();
+	        $scope.activeCallUser = null;
+
+	        step2();
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -182,10 +213,7 @@
 	        }
 	    }
 
-	    $scope.endCall = function () {
-	        window.existingCall.close();
-	        step2();
-	    }
+	    
 
 
 	    //PEERJS STUFF  

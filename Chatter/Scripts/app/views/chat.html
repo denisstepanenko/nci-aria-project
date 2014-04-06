@@ -53,7 +53,6 @@
                                         <a class="name">{{friend.name}}
                                             <span class="remove-friend badge pull-right" ng-click="removeFriend(friend)">Remove</span>    
                                             <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
-                                            <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Video Call</span>
                                         </a>
 
                                     </li>
@@ -112,17 +111,19 @@
                         
                         <div class="video">
                             <!-- Video area -->
-                            <div class="pure-u-2-3" id="video-container">
+                            <div class="" id="video-container" ng-show="activeCallUser">
                                 <div id="step1-error">
                                     <p>Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.</p>
                                     <a href="#" class="pure-button pure-button-error" id="step1-retry">Try again</a>
                                 </div>
 
                                 <video id="their-video" autoplay></video>
-                                <video id="my-video" muted="true" autoplay></video>
+                                <video id="my-video" muted="muted" autoplay></video>
 
-                                <button class="btn btn-default" ng-click="endCall()">End Call</button>
                             </div>
+
+                            <button class="btn btn-default" ng-click="callFriend(activeFriend)">Call</button>
+                            <button class="btn btn-default" ng-click="endCall()">End Call</button>
                         </div>
 
                         <div class="messages">

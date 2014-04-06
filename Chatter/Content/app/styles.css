@@ -3,3 +3,12 @@
     overflow-x:initial;
     height:350px;    
 }
+
+.video #my-video {
+    position: relative;
+    width: 125px;
+    top: -30px;
+    margin-top: -110px;
+    left: 130px;
+    border: 2px solid white;
+}
