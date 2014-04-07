@@ -12,38 +12,8 @@
 	        });
 	    }
 
-	    var chat = $.connection.chatHub;
-	    chat.client.incomingCall = function (destPeerID) {
-	        //the call recipient should handle incoming call request here
-	        if (confirm("Incomming call, answer? (" + destPeerID + ")")) {
-	            // Initiate a call!
-	            var call = peer.call(destPeerID, window.localStream);
-
-	            step3(call);
-	        }
-	    }
-
-	    chat.client.incomingTextMessage = function (message) {
-	        //the recipient should handle incoming text message request here
-	        alert(message);
-            
-	        //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
-
-            if ($scope.activeFriend) {
-                //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
-                $scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: activeFriend.name });
-            }        	        
-	    }
-
 	    var localPeerID;
-        
-	    // Start the connection.
-	    $.connection.hub.start().done(function () {	        
-	        chat.server.imOnline();
-	    }).fail(function (e1,e2,e3,e4) {
-	        debugger;
-	    });
-
+           
 	    //END PRIVATE STUFF
 
 	    $scope.friends = [];
@@ -87,6 +57,37 @@
                     
 	        $(function () {
 	            initializeBrowserVideo();
+	        });
+
+            //the SignalR init and callback handlers should be declared in init as otherwise they will end up in a different $scope
+	        $.connection.chatHub.client.incomingCall = function (destPeerID) {
+	            //the call recipient should handle incoming call request here
+	            if (confirm("Incomming call, answer? (" + destPeerID + ")")) {
+	                // Initiate a call!
+	                var call = peer.call(destPeerID, window.localStream);
+
+	                step3(call);
+	            }
+	        }
+
+	        $.connection.chatHub.client.incomingTextMessage = function (message) {
+	            //the recipient should handle incoming text message request here
+	            alert(message);
+
+	            //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
+
+	            if ($scope.activeFriend) {
+	                //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
+	                $scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: $scope.activeFriend.name });
+	            }
+	        }
+
+	        // Start the connection.
+	        $.connection.hub.start().done(function () {
+	            $.connection.chatHub.server.imOnline();
+	        }).fail(function (e1, e2, e3, e4) {
+	            console.log(err.message);
+	            $scope.videoError = "Error ocurred, please try again...";
 	        });
 	    }
 	    
@@ -165,7 +166,7 @@
 	        }
 
 	        //send the call request
-	        chat.server.callRequest(friend.id, localPeerID);
+	        $.connection.chatHub.server.callRequest(friend.id, localPeerID);
 
 	        $scope.activeCallUser = friend;
 	    }
@@ -199,7 +200,7 @@
 	            postChatHistory($scope.textMessage);
 
 	            //send message using SignalR
-	            chat.server.sendTextMessage($scope.activeFriend.id, $scope.textMessage);
+	            $.connection.chatHub.server.sendTextMessage($scope.activeFriend.id, $scope.textMessage);
                 
 	            $scope.activeFriend.messageHistory.push({ message: $scope.textMessage, datePosted: (new Date()).toDateString(), senderName: "me" });
 

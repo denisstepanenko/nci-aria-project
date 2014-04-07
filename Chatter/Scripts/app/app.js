@@ -20,7 +20,7 @@ chatterApp.config(['$locationProvider', '$routeProvider',
         }).
           when("/chat", {
               templateUrl: '/Scripts/app/views/chat.html',
-              controller: 'ChatCtrl'
+              //controller: 'ChatCtrl'
           }).
           when("/demo", {
               templateUrl: '/Scripts/app/views/demo.html',
