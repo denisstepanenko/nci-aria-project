@@ -1,4 +1,4 @@
-﻿var chatterApp = angular.module('chatterApp', ['ngRoute', 'controllers']);
+﻿var chatterApp = angular.module('chatterApp', ['ngRoute', 'controllers', 'directive.googlePlusAuth']);
 var controllers = angular.module('controllers', ['ui.bootstrap']);
 
 chatterApp.config(['$locationProvider', '$routeProvider',
