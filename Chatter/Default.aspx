@@ -25,9 +25,9 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/chat">Chat</a></li>
-                <li><a href="/demo">Demo</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="#chat">Chat</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#login">Login</a></li>
             </ul>
           <form class="navbar-form navbar-right" role="form">
             <div class="form-group">
@@ -56,6 +56,6 @@
     <script src="/Scripts/app/controllers/ctrl.login.js"></script>
     <script src="/Scripts/app/controllers/ctrl.chat.js"></script>
     <script src="/Scripts/app/controllers/ctrl.demo.js"></script>
-    
+    <script src="/Scripts/app/directives/google-plus-auth.js"></script>
 </body>
 </html>

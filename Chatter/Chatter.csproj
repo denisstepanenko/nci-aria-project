@@ -155,6 +155,9 @@
     <Content Include="Scripts\app\controllers\ctrl.demo.js" />
     <Content Include="Scripts\app\controllers\ctrl.home.js" />
     <Content Include="Scripts\app\controllers\ctrl.login.js" />
+    <Content Include="Scripts\app\directives\facebook-auth.js" />
+    <Content Include="Scripts\app\directives\google-plus-auth.js" />
+    <Content Include="Scripts\app\directives\linkedin-auth.js" />
     <Content Include="Scripts\app\views\chat.html" />
     <Content Include="Scripts\app\views\demo.html" />
     <Content Include="Scripts\app\views\home.html" />
@@ -220,8 +223,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\app\directives\" />
     <Folder Include="Scripts\app\models\" />
+    <Folder Include="src\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
