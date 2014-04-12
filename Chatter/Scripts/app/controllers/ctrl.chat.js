@@ -1,4 +1,7 @@
-﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log', 
+﻿//angular api: http://docs.angularjs.org/api/
+//peerJS API: http://peerjs.com/docs/
+
+controllers.controller('ChatCtrl', ['$scope', '$http', '$log',
 	function ($scope, $http, $log) {
 	    //PRIVATE STUFF
 	    var postChatHistory = function (message) {
@@ -60,11 +63,11 @@
 	        });
 
             //the SignalR init and callback handlers should be declared in init as otherwise they will end up in a different $scope
-	        $.connection.chatHub.client.incomingCall = function (destPeerID) {
+	        $.connection.chatHub.client.incomingCall = function (callerPeerID) {
 	            //the call recipient should handle incoming call request here
-	            if (confirm("Incomming call, answer? (" + destPeerID + ")")) {
+	            if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
 	                // Initiate a call!
-	                var call = peer.call(destPeerID, window.localStream);
+	                var call = peer.call(callerPeerID, window.localStream);
 
 	                step3(call);
 	            }
@@ -88,6 +91,7 @@
 	        }).fail(function (e1, e2, e3, e4) {
 	            console.log(err.message);
 	            $scope.videoError = "Error ocurred, please try again...";
+	            console.log("chathub error..");
 	        });
 	    }
 	    
@@ -250,6 +254,7 @@
 	    peer.on('error', function (err) {	        
 	        console.log(err.message);
 	        $scope.videoError = "Error ocurred, please try again...";
+	        console.log("peerjs error..");
 	    });
         
 	    function initializeBrowserVideo() {
