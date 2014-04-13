@@ -1,4 +1,5 @@
-﻿using Chatter.API.DTOs;
+﻿using Chatter.API.Base;
+using Chatter.API.DTOs;
 using Chatter.Data.Models;
 using Newtonsoft.Json;
 using System;
@@ -9,20 +10,17 @@ using System.Net.Http;
 using System.Web.Http;
 
 namespace Chatter.API.Controllers
-{
-    public class UserController : ApiController
+{    
+    public class UserController : ApiControllerBase
     {
         private ConceptualModelContainer db = new ConceptualModelContainer();
-        //private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
-
-        //TODO: ensure that findFriend functions don't return the currently logged in user
-
+        
         [HttpGet]
-        public object FindFriends(string searchCriteria, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
+        public object FindFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
         {
             var users = from u in db.Users.ToList()
-                        let allowAddFriend = db.Friends.Count(f => f.UserID == currentlyLoggedUserID && f.FriendUserID == u.Id) == 0
-                        where IsSearchCriteriaMatchToUser(searchCriteria, u)
+                        let allowAddFriend = db.Friends.Count(f => f.UserID == CurrentUser.Id && f.FriendUserID == u.Id) == 0
+                        where IsSearchCriteriaMatchToUser(searchCriteria, u) && u.Id != CurrentUser.Id
                         select new { name = u.FirstName + " " + u.LastName, allowAddFriend, id = u.Id };
 
             var result = new { totalItems = users.Count(), data = users.Skip((pageNumber - 1) * pageSize).Take(pageSize) };
@@ -30,12 +28,12 @@ namespace Chatter.API.Controllers
             return result;
         }
 
-        [HttpGet]
-        public object FindMyFriends(string searchCriteria, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
+        [HttpGet]        
+        public object FindMyFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
         {
             var users = from f in db.Friends.ToList()
                         join u in db.Users.ToList() on f.FriendUserID equals u.Id
-                        where f.UserID == currentlyLoggedUserID
+                        where f.UserID == CurrentUser.Id
                         && (IsSearchCriteriaMatchToUser(searchCriteria, u) || searchCriteria == "all")
                         select new { name = u.FirstName + " " + u.LastName, id = u.Id };
 
@@ -45,20 +43,20 @@ namespace Chatter.API.Controllers
         }
 
         [HttpPost]
-        public void AddToFriends(AddToFriendsDTO data, int currentlyLoggedUserID)
+        public void AddToFriends(AddToFriendsDTO data)
         {
-            var friend = db.Friends.FirstOrDefault(f => f.FriendUserID == data.friendUserID && f.UserID == currentlyLoggedUserID);
+            var friend = db.Friends.FirstOrDefault(f => f.FriendUserID == data.friendUserID && f.UserID == CurrentUser.Id);
             if (friend != null) return;
-            friend = new Friend {UserID = currentlyLoggedUserID, FriendUserID = data.friendUserID};
+            friend = new Friend { UserID = CurrentUser.Id, FriendUserID = data.friendUserID };
             db.Friends.Add(friend);
             db.SaveChanges();
         }
 
         [HttpDelete]
-        public void RemoveFriend(int friendUserID, int currentlyLoggedUserID)
+        public void RemoveFriend(int friendUserID)
         {
             var friend = (from f in db.Friends
-                          where f.UserID == currentlyLoggedUserID && f.FriendUserID == friendUserID
+                          where f.UserID == CurrentUser.Id && f.FriendUserID == friendUserID
                           select f).FirstOrDefault();
 
             if (friend != null)
@@ -69,18 +67,18 @@ namespace Chatter.API.Controllers
         }
 
         [HttpGet]
-        public object GetChatHistory(int friendUserID, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
+        public object GetChatHistory(int friendUserID, int pageNumber = 1, int pageSize = 20)
         {
             //cross-site scripting is handeled by AngularJS as it escapes HTML
-            var data1 = from m in db.ChatHistories                        
-                        where (m.SenderUserID == currentlyLoggedUserID && m.RecipientUserID == friendUserID)
-                        || (m.RecipientUserID == currentlyLoggedUserID && m.SenderUserID == friendUserID)
+            var data1 = from m in db.ChatHistories
+                        where (m.SenderUserID == CurrentUser.Id && m.RecipientUserID == friendUserID)
+                        || (m.RecipientUserID == CurrentUser.Id && m.SenderUserID == friendUserID)
                         orderby m.CreatedDate descending
                         select m;
 
             var messages = from d in data1.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList()
                            join su in db.Users on d.SenderUserID equals su.Id
-                           let senderName = su.Id == currentlyLoggedUserID ? "me" : su.FirstName + " " + su.LastName
+                           let senderName = su.Id == CurrentUser.Id ? "me" : su.FirstName + " " + su.LastName
                            orderby d.CreatedDate ascending
                            select new { message = d.Message, datePosted = d.CreatedDate.ToString("dd MMM")+" at "+d.CreatedDate.ToString("HH:mm:ss"), senderName };
 
@@ -96,7 +94,7 @@ namespace Chatter.API.Controllers
             {
                 Message = data.message,
                 RecipientUserID = data.friendUserID,
-                SenderUserID = data.currentlyLoggedUserID,
+                SenderUserID = CurrentUser.Id,
                 CreatedDate = DateTime.Now
             };
 

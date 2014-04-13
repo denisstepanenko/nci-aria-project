@@ -10,13 +10,16 @@ using System.Web.Script.Serialization;
 using Chatter.API.DTOs;
 using Chatter.Auth;
 using Chatter.Data.Models;
+using System.Web.Security;
+using Chatter.API.Base;
 
 namespace Chatter.API.Controllers
 {
-    public class AuthController : ApiController
+    public class AuthController : ApiControllerBase
     {
         private ConceptualModelContainer db = new ConceptualModelContainer();
 
+        [AllowAnonymous]
         [HttpGet]
         public object GetUserId(int authType, string accessToken)
         {
@@ -44,30 +47,33 @@ namespace Chatter.API.Controllers
                 }
             }
 
-            var users =
-                db.Users.Where(u => u.Email.Equals(googleIdentity.email, StringComparison.CurrentCultureIgnoreCase))
-                    .Select(u => u);
-
-
-            var user = users.FirstOrDefault();
-
-            if (null != user)
+            //get user from the ASP.NET Membership Provider. Here we'll assume that the user's username is their email address
+            //in real world scenario this would be different in that there would be a memberhsip provider table used for OAuth authentication
+            MembershipUser aspUser = Membership.GetUser(googleIdentity.email);
+            if (aspUser == null)
             {
-                googleIdentity.userId = user.Id;
+                aspUser = Membership.CreateUser(googleIdentity.email, googleIdentity.id, googleIdentity.email);
             }
-            else
-            {                
-                db.Users.Add(new User() {Email = googleIdentity.email, 
-                        FirstName = googleIdentity.given_name,
-                        LastName = googleIdentity.family_name,
-                        ConnectionID = googleIdentity.id,
-                        Nickname = googleIdentity.name});
+            FormsAuthentication.SetAuthCookie(aspUser.UserName, true);
+            
+            User user = db.Users.Where(u => u.Email.Equals(googleIdentity.email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (null == user)
+            {
+                user = new User()
+                {
+                    Email = googleIdentity.email,
+                    FirstName = googleIdentity.given_name,
+                    LastName = googleIdentity.family_name,
+                    Nickname = googleIdentity.name
+                };
+
+                db.Users.Add(user);
                 db.SaveChanges();
             }
 
-            return googleIdentity;
+            googleIdentity.userId = user.Id;
 
-
+            return googleIdentity;            
         }
 
     }

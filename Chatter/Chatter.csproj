@@ -173,6 +173,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Base\ApiControllerBase.cs" />
     <Compile Include="API\Controllers\AuthController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\DTOs\AddToFriendsDTO.cs" />
