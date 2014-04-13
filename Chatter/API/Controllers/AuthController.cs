@@ -75,6 +75,20 @@ namespace Chatter.API.Controllers
 
             return googleIdentity;            
         }
+                
+        public HttpResponseMessage Logout()
+        {
+            //return new HttpResponseMessage(HttpStatusCode.OK)
+            //{
+            //    Content = new ObjectContent<object>(new
+            //    {
+            //        UserName = User.Identity.Name
+            //    }, Configuration.Formatters.JsonFormatter)
+            //};
 
+            FormsAuthentication.SignOut();
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }

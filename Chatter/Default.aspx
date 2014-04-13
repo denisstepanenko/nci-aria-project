@@ -28,6 +28,7 @@
                 <li><a href="#chat">Chat</a></li>
                 <li><a href="#demo">Demo</a></li>
                 <li><a href="#login">Login</a></li>
+                <li><a href="#logout">Logout</a></li>
             </ul>
 <%--          <form class="navbar-form navbar-right" role="form">
             <div class="form-group">

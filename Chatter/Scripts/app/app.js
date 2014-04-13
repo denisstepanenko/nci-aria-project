@@ -50,5 +50,11 @@ chatterApp.run(function($rootScope, $location) {
             }
         }
     });
+
+    $rootScope.logoutClick = function () {
+        $http.post("/api/user/logout").success(function () {
+            $location.path("/");
+        });        
+    }
 });
 
