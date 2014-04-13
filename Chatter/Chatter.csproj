@@ -171,6 +171,7 @@
     <Content Include="Scripts\jasmine\jasmine.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.min.js" />
+    <Content Include="Scripts\tests\spec\LoginSpec.js" />
     <Content Include="SpecRunner.html" />
     <Content Include="SQL Scripts\script.sql" />
     <Content Include="Scripts\tests\lib\jasmine-2.0.0\boot.js" />

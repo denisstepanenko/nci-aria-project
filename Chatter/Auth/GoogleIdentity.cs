@@ -7,7 +7,7 @@ namespace Chatter.Auth
 {
     public class GoogleIdentity
     {
-        public String id { get; set; }
+        public String id { get; set; } //populated by the deserialization of the object returned by google
         public String email { get; set; }
         public Boolean verified_email { get; set; }
         public String name { get; set; }
@@ -17,6 +17,6 @@ namespace Chatter.Auth
         public String picture { get; set; }
         public String gender { get; set; }
         public String locale { get; set; }
-        public int userId { get; set; }
+        public int userId { get; set; }//This links to Users.Id
     }
 }
