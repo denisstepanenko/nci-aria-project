@@ -29,7 +29,7 @@
                 <li><a href="#demo">Demo</a></li>
                 <li><a href="#login">Login</a></li>
             </ul>
-          <form class="navbar-form navbar-right" role="form">
+<%--          <form class="navbar-form navbar-right" role="form">
             <div class="form-group">
               <input type="text" placeholder="Email" class="form-control">
             </div>
@@ -37,7 +37,7 @@
               <input type="password" placeholder="Password" class="form-control">
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+          </form>--%>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
