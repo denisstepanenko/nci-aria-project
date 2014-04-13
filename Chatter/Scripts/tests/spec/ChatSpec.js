@@ -16,6 +16,7 @@ describe("ChatController", function () {
             $httpBackend = _$httpBackend_;
                         
             ctrl = $controller('ChatCtrl', {
+                $rootScope: $rootScope,
                 $scope: $scope,
                 $http: $http,
                 $log: null

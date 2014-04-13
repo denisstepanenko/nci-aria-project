@@ -9,8 +9,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	        //posts the message
 	        $http.post("/api/user/postTextMessage", {
 	            friendUserID: $scope.activeFriend.id,
-	            message: message,
-	            currentlyLoggedUserID: $rootScope.currentUserId
+	            message: message
 	        }).success(function (data) {
 	            //do nothing as this is "fire and forget" post, used just for history 
 	        });
@@ -100,7 +99,6 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	        $http.get("/api/user/FindFriends", {
 	            params: {
 	                searchCriteria: $scope.friendSearchCriteria,
-	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.friendsPaginationData.currentPage,
 	                pageSize: $scope.friendsPaginationData.itemsPerPage
 	            }
@@ -117,7 +115,6 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	        $http.get("/api/user/FindMyFriends", {
 	            params: {
 	                searchCriteria: criteria,
-	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.myFriendsPaginationData.currentPage,
 	                pageSize: $scope.myFriendsPaginationData.itemsPerPage
 	            }
@@ -128,9 +125,9 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	    }
         
 	    $scope.addToFriends = function (user) {
-	        $http.post("/api/user/addToFriends", { friendUserID: user.id, currentlyLoggedUserID: $rootScope.currentUserId }).success(function (data) {
+	        $http.post("/api/user/addToFriends", { friendUserID: user.id }).success(function (data) {
 	            //repopulate friends list so that the "add friend" button is not shown anymore as the friend is already added
-	            $scope.findFriends($scope.searchCriteria, $rootScope.currentUserId);
+	            $scope.findFriends($scope.searchCriteria);
 	        });	       
 	    }
 
@@ -145,7 +142,6 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	        $http.get("/api/user/getChatHistory", {
 	            params: {
 	                friendUserID: $scope.activeFriend.id,
-	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.chatHistoryPaginationData.currentPage,
 	                pageSize: $scope.chatHistoryPaginationData.itemsPerPage
 	            }
@@ -191,8 +187,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	        if (confirm("Are you sure?")) {
 	            $http.delete("/api/user/removeFriend", {
 	                params: {
-	                    friendUserID: friend.id,
-	                    currentlyLoggedUserID: $rootScope.currentUserId
+	                    friendUserID: friend.id
 	                }
 	            }).success(function () {
 	                //removing from the array once removed fromthe DB (avoiding reload)
