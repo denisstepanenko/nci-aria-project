@@ -27,7 +27,10 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="#chat">Chat</a></li>
                 <li><a href="#demo">Demo</a></li>
-                <li><a href="#login">Login</a></li>
+
+                <li ng-show="!loggedOn"><a href="#login">Login</a></li>
+                <li ng-show="loggedOn"><a href="#profile">Profile</a></li>
+
             </ul>
 <%--          <form class="navbar-form navbar-right" role="form">
             <div class="form-group">

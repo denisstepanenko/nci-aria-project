@@ -9,11 +9,11 @@ chatterApp.config(['$locationProvider', '$routeProvider',
 
     
       $routeProvider.
-        //when('/', {
-        //    templateUrl: '/Scripts/app/views/home.html',
-        //    controller: 'HomeCtrl'
-        //}).
-          when('/', {
+        when('/', {
+            templateUrl: '/Scripts/app/views/home.html',
+            controller: 'HomeCtrl'
+        }).
+          when('/chat', {
               templateUrl: '/Scripts/app/views/chat.html',
               controller: 'ChatCtrl'
           }).
@@ -21,28 +21,30 @@ chatterApp.config(['$locationProvider', '$routeProvider',
             templateUrl: '/Scripts/app/views/login.html',
             controller: 'LoginCtrl'
         }).
-          when("/chat", {
-              templateUrl: '/Scripts/app/views/chat.html',
-              //controller: 'ChatCtrl'
-          }).
+           when("/profile", {
+               //this is a hack because the profile was enbedded into login view, so no time changing this for now
+               templateUrl: '/Scripts/app/views/login.html',
+               controller: 'LoginCtrl'
+           }).        
           when("/demo", {
               templateUrl: '/Scripts/app/views/demo.html',
               controller: 'DemoCtrl'
-          }).
+          }).          
         otherwise({
             redirectTo: '/'
         });
   }]);
 
 //Authorisation 
-chatterApp.run(function($rootScope, $location) {
-    $rootScope.currentUserId = 0;
+chatterApp.run(function($rootScope, $location) {    
     $rootScope.userInfo = {};
-
+    
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
         if ($location.path() == "/chat") {
-            if ($rootScope.currentUserId == null || $rootScope.currentUserId == 0) {
+            if (!$rootScope.userInfo || !$rootScope.userInfo.userId || $rootScope.userInfo.userId == 0) {
+
                 alert('You need to log in first!');
+
                 if (next.templateUrl == "/Scripts/app/views/login.html") {
                 } else {
                     $location.path("/login");
