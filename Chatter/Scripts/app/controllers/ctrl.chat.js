@@ -1,12 +1,13 @@
-﻿controllers.controller('ChatCtrl', ['$scope', '$http', '$log', 
-	function ($scope, $http, $log) {
+﻿controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 
+	function ($rootScope, $scope, $http, $log) {
 	    //PRIVATE STUFF
 	    var postChatHistory = function (message) {
             //TODO:move this logic into SignalR hub
 	        //posts the message
 	        $http.post("/api/user/postTextMessage", {
 	            friendUserID: $scope.activeFriend.id,
-	            message: message
+	            message: message,
+	            currentlyLoggedUserID: $rootScope.currentUserId
 	        }).success(function (data) {
 	            //do nothing as this is "fire and forget" post, used just for history 
 	        });
@@ -95,6 +96,7 @@
 	        $http.get("/api/user/FindFriends", {
 	            params: {
 	                searchCriteria: $scope.friendSearchCriteria,
+	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.friendsPaginationData.currentPage,
 	                pageSize: $scope.friendsPaginationData.itemsPerPage
 	            }
@@ -111,6 +113,7 @@
 	        $http.get("/api/user/FindMyFriends", {
 	            params: {
 	                searchCriteria: criteria,
+	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.myFriendsPaginationData.currentPage,
 	                pageSize: $scope.myFriendsPaginationData.itemsPerPage
 	            }
@@ -121,9 +124,9 @@
 	    }
         
 	    $scope.addToFriends = function (user) {
-	        $http.post("/api/user/addToFriends", { friendUserID: user.id }).success(function (data) {
+	        $http.post("/api/user/addToFriends", { friendUserID: user.id, currentlyLoggedUserID: $rootScope.currentUserId }).success(function (data) {
 	            //repopulate friends list so that the "add friend" button is not shown anymore as the friend is already added
-	            $scope.findFriends($scope.searchCriteria);
+	            $scope.findFriends($scope.searchCriteria, $rootScope.currentUserId);
 	        });	       
 	    }
 
@@ -138,6 +141,7 @@
 	        $http.get("/api/user/getChatHistory", {
 	            params: {
 	                friendUserID: $scope.activeFriend.id,
+	                currentlyLoggedUserID: $rootScope.currentUserId,
 	                pageNumber: $scope.chatHistoryPaginationData.currentPage,
 	                pageSize: $scope.chatHistoryPaginationData.itemsPerPage
 	            }
@@ -183,7 +187,8 @@
 	        if (confirm("Are you sure?")) {
 	            $http.delete("/api/user/removeFriend", {
 	                params: {
-	                    friendUserID: friend.id
+	                    friendUserID: friend.id,
+	                    currentlyLoggedUserID: $rootScope.currentUserId
 	                }
 	            }).success(function () {
 	                //removing from the array once removed fromthe DB (avoiding reload)

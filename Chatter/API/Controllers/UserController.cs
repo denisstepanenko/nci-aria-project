@@ -13,15 +13,15 @@ namespace Chatter.API.Controllers
     public class UserController : ApiController
     {
         private ConceptualModelContainer db = new ConceptualModelContainer();
-        private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
+        //private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
 
         //TODO: ensure that findFriend functions don't return the currently logged in user
 
         [HttpGet]
-        public object FindFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
+        public object FindFriends(string searchCriteria, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
         {
             var users = from u in db.Users.ToList()
-                        let allowAddFriend = db.Friends.Where(f => f.UserID == currentlyLoggedUserID && f.FriendUserID == u.Id).Count() == 0
+                        let allowAddFriend = db.Friends.Count(f => f.UserID == currentlyLoggedUserID && f.FriendUserID == u.Id) == 0
                         where IsSearchCriteriaMatchToUser(searchCriteria, u)
                         select new { name = u.FirstName + " " + u.LastName, allowAddFriend, id = u.Id };
 
@@ -31,7 +31,7 @@ namespace Chatter.API.Controllers
         }
 
         [HttpGet]
-        public object FindMyFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
+        public object FindMyFriends(string searchCriteria, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
         {
             var users = from f in db.Friends.ToList()
                         join u in db.Users.ToList() on f.FriendUserID equals u.Id
@@ -45,22 +45,17 @@ namespace Chatter.API.Controllers
         }
 
         [HttpPost]
-        public void AddToFriends(AddToFriendsDTO data)
+        public void AddToFriends(AddToFriendsDTO data, int currentlyLoggedUserID)
         {
-            var friend = db.Friends.Where(f => f.FriendUserID == data.friendUserID && f.UserID == currentlyLoggedUserID).FirstOrDefault();
-            if (friend == null)
-            {
-                friend = new Friend();
-                friend.UserID = currentlyLoggedUserID;
-                friend.FriendUserID = data.friendUserID;
-
-                db.Friends.Add(friend);
-                db.SaveChanges();
-            }
+            var friend = db.Friends.FirstOrDefault(f => f.FriendUserID == data.friendUserID && f.UserID == currentlyLoggedUserID);
+            if (friend != null) return;
+            friend = new Friend {UserID = currentlyLoggedUserID, FriendUserID = data.friendUserID};
+            db.Friends.Add(friend);
+            db.SaveChanges();
         }
 
         [HttpDelete]
-        public void RemoveFriend(int friendUserID)
+        public void RemoveFriend(int friendUserID, int currentlyLoggedUserID)
         {
             var friend = (from f in db.Friends
                           where f.UserID == currentlyLoggedUserID && f.FriendUserID == friendUserID
@@ -74,7 +69,7 @@ namespace Chatter.API.Controllers
         }
 
         [HttpGet]
-        public object GetChatHistory(int friendUserID, int pageNumber = 1, int pageSize = 20)
+        public object GetChatHistory(int friendUserID, int currentlyLoggedUserID, int pageNumber = 1, int pageSize = 20)
         {
             //cross-site scripting is handeled by AngularJS as it escapes HTML
             var data1 = from m in db.ChatHistories                        
@@ -97,11 +92,13 @@ namespace Chatter.API.Controllers
         [HttpPost]
         public void PostTextMessage(PostTextMessageDTO data)
         {
-            var chatHistoryItem = new ChatHistory();
-            chatHistoryItem.Message = data.message;
-            chatHistoryItem.RecipientUserID = data.friendUserID;
-            chatHistoryItem.SenderUserID = currentlyLoggedUserID;
-            chatHistoryItem.CreatedDate = DateTime.Now;
+            var chatHistoryItem = new ChatHistory
+            {
+                Message = data.message,
+                RecipientUserID = data.friendUserID,
+                SenderUserID = data.currentlyLoggedUserID,
+                CreatedDate = DateTime.Now
+            };
 
             db.ChatHistories.Add(chatHistoryItem);
             db.SaveChanges();

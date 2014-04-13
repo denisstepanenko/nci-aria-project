@@ -9,5 +9,6 @@ namespace Chatter.API.DTOs
     {
         public int friendUserID;
         public string message;
+        public int currentlyLoggedUserID;
     }
 }
