@@ -59,19 +59,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -188,10 +183,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Base\ApiControllerBase.cs" />
+    <Compile Include="API\Controllers\AuthController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
     <Compile Include="API\DTOs\AddToFriendsDTO.cs" />
+    <Compile Include="API\DTOs\AuthDTO.cs" />
     <Compile Include="API\DTOs\PostTextMessageDTO.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Auth\GoogleIdentity.cs" />
     <Compile Include="Data\DAL\GenericController.cs" />
     <Compile Include="Data\Models\ChatHistory.cs">
       <DependentUpon>ConceptualModel.tt</DependentUpon>
@@ -230,8 +229,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
     <Compile Include="SignalR\Startup.cs" />
+    <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\BlahBox.pubxml" />
+    <Content Include="Views\Jasmine\SpecRunner.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -241,7 +243,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\app\models\" />
-    <Folder Include="src\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
