@@ -1,4 +1,4 @@
-describe("LoginController", function () {
+describe("chatterApp: Application level testing", function () {
     beforeEach(module('ui.bootstrap'));
     beforeEach(module('controllers'));
     beforeEach(module('chatterApp'));
@@ -7,24 +7,22 @@ describe("LoginController", function () {
     var $scope, ctrl, $httpBackend, http, $log;
 
     beforeEach(
-        inject(function ($rootScope, $controller, _$httpBackend_, $http, _$log_) {
+        inject(function ($rootScope, $chatterApp, _$httpBackend_, $http, _$log_) {
             $scope = $rootScope.$new();
 
             $httpBackend = _$httpBackend_;
 
             $log = _$log_;
-            
-            ctrl = $controller('LoginCtrl', {
+
+            ctrl = $chatterApp('chatterApp', {
                 $rootScope: $rootScope,
-                $scope: $scope,
+                $location: $location,
                 $http: $http,
-                $log: $log
             });
 
         }));
 
-    
-    //it("Should handle Google Auth Success event", inject(function ($rootScope, $controller) {
+    //it("Should handle Google Auth Success event", inject(function ($rootScope, $chatterApp) {
     //    var successLoginArgs = {
     //        status: { google_logged_in: true },
     //        access_token: "123345456hdfgh"
@@ -34,7 +32,7 @@ describe("LoginController", function () {
     //    $httpBackend.expectGET("/api/auth/GetUserId?authType=1&accessToken=" & successLoginArgs.access_token)
     //        .respond(responseData);
 
-    //    $scope.$broadcast('event:google-plus-auth-success',  successLoginArgs);
+    //    $rootScope.$broadcast('event:google-plus-auth-success',  successLoginArgs);
 
     //    $httpBackend.flush();
 
@@ -45,7 +43,7 @@ describe("LoginController", function () {
     //    $httpBackend.expectGET("/api/auth/GetUserId?authType=1&accessToken=" & successLoginArgs.access_token)
     //        .respond(500);
 
-    //    $scope.$broadcast('event:google-plus-auth-success', successLoginArgs);
+    //    $rootScope.$broadcast('event:google-plus-auth-success', successLoginArgs);
 
     //    $httpBackend.flush();
 
@@ -53,9 +51,9 @@ describe("LoginController", function () {
     //    expect($rootScope.userInfo).toEqual({});
     //}));
 
-    //it("Should handle Google Auth Failed event", inject(function ($rootScope, $controller) {
+    //it("Should handle Google Auth Failed event", inject(function ($rootScope, $chatterApp) {
      
-    //    $scope.$broadcast('event:google-plus-auth-failure');
+    //    $rootScope.$broadcast('event:google-plus-auth-failure');
              
     //    expect($rootScope.loggedOn).toEqual(false);
     //    expect($rootScope.userInfo).toEqual({});

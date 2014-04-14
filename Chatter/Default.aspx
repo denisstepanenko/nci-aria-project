@@ -11,30 +11,33 @@
     <link href="/Content/app/styles.css" rel="stylesheet" />
 </head>
 <body>
+    <div style="display: none;" ng-app="directive.googlePlusAuth">
+        <google-plus-auth clientid="539619638814-bc68fotft1msfr537c0ckpdsctshn5ls.apps.googleusercontent.com"></google-plus-auth>
+    </div>
+
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Chatter</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="#chat">Chat</a></li>
-                <li><a href="#demo">Demo</a></li>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Chatter</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#chat">Chat</a></li>
+                    <%--<li><a href="#demo">Demo</a></li>--%>
 
-                <li ng-show="!loggedOn"><a href="#login">Login</a></li>
+                    <li ng-show="!loggedOn"><a href="#login">Login</a></li>
 
-                <li ng-show="loggedOn"><a href="#profile">Profile</a></li>
-                <li ng-show="loggedOn"><a href="#logout" ng-click="logoutClick">Logout</a></li>
+                    <li ng-show="loggedOn"><a href="#profile">Profile</a></li>
 
-            </ul>
-<%--          <form class="navbar-form navbar-right" role="form">
+                </ul>
+                <%--          <form class="navbar-form navbar-right" role="form">
             <div class="form-group">
               <input type="text" placeholder="Email" class="form-control">
             </div>
@@ -43,8 +46,9 @@
             </div>
             <button type="submit" class="btn btn-success">Sign in</button>
           </form>--%>
-        </div><!--/.navbar-collapse -->
-      </div>
+            </div>
+            <!--/.navbar-collapse -->
+        </div>
     </div>
     <div ng-view></div>
 

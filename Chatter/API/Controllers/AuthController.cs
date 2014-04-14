@@ -82,7 +82,9 @@ namespace Chatter.API.Controllers
 
             return googleIdentity;            
         }
-                
+
+        [HttpGet]
+        [HttpPost]
         public HttpResponseMessage Logout()
         {
             //return new HttpResponseMessage(HttpStatusCode.OK)
