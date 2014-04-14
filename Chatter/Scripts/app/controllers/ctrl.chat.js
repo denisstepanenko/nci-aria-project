@@ -15,42 +15,61 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    var initSignalR = function () {        	        
-	        $.connection.chatHub.client.incomingCall = function (callerPeerID) {
-	            //the call recipient should handle incoming call request here
-	            if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
-	                // Initiate a call!
-	                var call = $rootScope.peer.call(callerPeerID, window.localStream);
+	    var initSignalR = function () {
+	        
+	            $.connection.chatHub.client.incomingCall = function (callerPeerID, callerUserID) {
+	                $scope.$apply(function (scope) {
+	                    //the call recipient should handle incoming call request here
+	                    if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
+	                        // Initiate a call!
+	                        var call = $rootScope.peer.call(callerPeerID, window.localStream);
 
-	                step3(call);
+	                        step3(call, scope);
+	                        
+	                        //get the user and show their chat hisotry and video window
+	                        $http.get("/api/user/GetMyFriend", {
+	                            params: {
+	                                userID: callerUserID,
+	                            }
+	                        }).success(function (data) {
+	                            scope.activeCallUser = data;
+	                            scope.myFriendClick(data);//this is to make a calling user active and get their chat history
+	                        });
+	                    }
+	                });
 	            }
-	        }
 
-	        $.connection.chatHub.client.incomingTextMessage = function (message) {
-	            $scope.$apply(function (scope) {	                
-	                //the recipient should handle incoming text message request here
-	                alert(message);
+	            $.connection.chatHub.client.callEndRequest = function () {
+	                $scope.$apply(function (scope) {
+	                    scope.endCall();
+	                });
+	            }
 
-	                //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
+	            $.connection.chatHub.client.incomingTextMessage = function (message) {
+	                $scope.$apply(function (scope) {
+	                    //the recipient should handle incoming text message request here
+	                    alert(message);
 
-	                if (scope.activeFriend) {
-	                    //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
-	                    scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: scope.activeFriend.name });
-	                }
+	                    //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
+
+	                    if (scope.activeFriend) {
+	                        //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
+	                        scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: scope.activeFriend.name });
+	                    }
+	                });
+	            }
+
+	            // Start the connection.
+	            $.connection.hub.start().done(function () {
+	                $.connection.chatHub.server.imOnline();
+	            }).fail(function (e1, e2, e3, e4) {
+	                $scope.$apply(function (scope) {
+	                    console.log(err.message);
+	                    scope.videoError = "Error ocurred, please try again...";
+	                    console.log("chathub error..");
+	                });
 	            });
-	        }
-
-	        // Start the connection.
-	        $.connection.hub.start().done(function () {
-	            $.connection.chatHub.server.imOnline();
-	        }).fail(function (e1, e2, e3, e4) {
-	            $scope.$apply(function (scope) {
-
-	                console.log(err.message);
-	                scope.videoError = "Error ocurred, please try again...";
-	                console.log("chathub error..");
-	            });
-	        });
+	        
 	    }
 
 	    $rootScope.localPeerID;
@@ -118,7 +137,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    $scope.findMyFriends = function () {
+	    $scope.findMyFriends = function (connectionID) {       
 	        //search for users matching the search criteria
 	        var criteria = !$scope.myFriendSearchCriteria || $scope.myFriendSearchCriteria.toString().trim() == "" ? "all" : $scope.myFriendSearchCriteria;
 
@@ -126,7 +145,8 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            params: {
 	                searchCriteria: criteria,
 	                pageNumber: $scope.myFriendsPaginationData.currentPage,
-	                pageSize: $scope.myFriendsPaginationData.itemsPerPage
+	                pageSize: $scope.myFriendsPaginationData.itemsPerPage,
+	                signalConnectionID: connectionID
 	            }
 	        }).success(function (data) {
 	            $scope.myFriends = data.data;
@@ -190,7 +210,11 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            window.existingCall.close();
 	        }
 
-	        $scope.activeCallUser = null;
+	        if ($scope.activeCallUser) {
+	            $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
+	        }
+
+	        $scope.activeCallUser = null;	        
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -252,10 +276,12 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 	        // Receiving a call
 	        $rootScope.peer.on('call', function (call) {
-	            // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
-	            call.answer(window.localStream);
+	            $scope.$apply(function (scope) {
+	                // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
+	                call.answer(window.localStream);
 
-	            step3(call);
+	                step3(call, scope);
+	            });
 	        });
 
 	        $rootScope.peer.on('error', function (err) {
@@ -282,8 +308,8 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    function step3(call) {
-	        $scope.$apply(function (scope) {
+	    function step3(call, scope) {
+	        
 	            scope.videoError = "";
 
 	            // Hang up on an existing call if present
@@ -308,7 +334,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	                //informs the user that they have to allow the use of webcam through the browser
 	                scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
 	            }
-	        });
+	        
 	    }
         //END PEERJS STUFF
 	}]);

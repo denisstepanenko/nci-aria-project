@@ -32,14 +32,30 @@ namespace Chatter.SignalR
             db.SaveChanges();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="destinationUserID"></param>
+        /// <param name="destPeerID"></param>        
         public void CallRequest(int destinationUserID, string destPeerID)
         {
             //check if there is a link between a current user and the destination user
             var user = GetDestinationUser(destinationUserID);
+            var currentUser = Utils.Utils.GetCurrentUser();
 
             if (user !=null)
             {
-                Clients.Client(user.ConnectionID).incomingCall(destPeerID);
+                Clients.Client(user.ConnectionID).incomingCall(destPeerID, currentUser.Id);
+            }
+        }
+
+        public void CallTerminated(int destinationUserID)
+        {
+            var user = GetDestinationUser(destinationUserID);
+
+            if (user != null)
+            {
+                Clients.Client(user.ConnectionID).callEndRequest();
             }
         }
 

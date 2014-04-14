@@ -28,7 +28,7 @@ namespace Chatter.API.Controllers
             return result;
         }
 
-        [HttpGet]        
+        [HttpGet]
         public object FindMyFriends(string searchCriteria, int pageNumber = 1, int pageSize = 20)
         {
             var users = from f in db.Friends.ToList()
@@ -40,6 +40,17 @@ namespace Chatter.API.Controllers
             var result = new { totalItems = users.Count(), data = users.Skip((pageNumber - 1) * pageSize).Take(pageSize) };
 
             return result;
+        }
+
+        [HttpGet]
+        public object GetMyFriend(int userID)
+        {
+            var users = from f in db.Friends.ToList()
+                        join u in db.Users.ToList() on f.FriendUserID equals u.Id
+                        where f.UserID == CurrentUser.Id && u.Id == userID
+                        select new { name = u.FirstName + " " + u.LastName, id = u.Id };
+
+            return users.FirstOrDefault();
         }
 
         [HttpPost]
