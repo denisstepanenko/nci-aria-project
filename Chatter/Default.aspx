@@ -67,5 +67,7 @@
     <script src="/Scripts/app/controllers/ctrl.chat.js"></script>
     <script src="/Scripts/app/controllers/ctrl.demo.js"></script>
     <script src="/Scripts/app/directives/google-plus-auth.js"></script>
+    <script src="/Scripts/toastr.min.js"></script>
+    <link href="/Content/toastr.min.css" rel="stylesheet" />
 </body>
 </html>

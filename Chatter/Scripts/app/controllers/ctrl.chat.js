@@ -48,10 +48,9 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            $.connection.chatHub.client.incomingTextMessage = function (message) {
 	                $scope.$apply(function (scope) {
 	                    //the recipient should handle incoming text message request here
-	                    alert(message);
-
-	                    //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
-
+	                    
+	                    toastr.success(message);
+                        
 	                    if (scope.activeFriend) {
 	                        //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
 	                        scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: scope.activeFriend.name });
@@ -214,7 +213,9 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
 	        }
 
-	        $scope.activeCallUser = null;	        
+	        $scope.activeCallUser = null;
+
+	        toastr.info('Call ended')
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -229,6 +230,8 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	                if (idx >= 0) {
 	                    $scope.myFriends.splice(idx, 1);
 	                }
+
+	                toastr.info('Friend removed')
 	            });
 	        }
 	    }
