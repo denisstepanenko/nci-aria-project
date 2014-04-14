@@ -12,3 +12,8 @@
     left: 130px;
     border: 2px solid white;
 }
+
+body #toast-container > .toast-success {
+    background-image:none!important;
+    padding-left:15px;
+}
