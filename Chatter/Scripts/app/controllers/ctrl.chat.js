@@ -1,8 +1,8 @@
 ﻿//angular api: http://docs.angularjs.org/api/
 //peerJS API: http://peerjs.com/docs/
 
-controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
-	function ($rootScope, $scope, $http, $log) {
+controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'ChatterConfig',
+	function ($rootScope, $scope, $http, $log, ChatterConfig) {
 	    //PRIVATE STUFF
 	    var postChatHistory = function (message) {
             //TODO:move this logic into SignalR hub
@@ -239,7 +239,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log',
 	    function initPeerJs() {
 	        // PeerJS object
 	        $rootScope.peer = new Peer({
-	            key: 'lwjd5qra8257b9', debug: 3, config: {
+	            key: ChatterConfig.PeerJSApiKey, debug: 3, config: {
 	                'iceServers': [
                       { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
 	                ]

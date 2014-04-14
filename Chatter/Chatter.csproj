@@ -151,6 +151,7 @@
       <LastGenOutput>ConceptualModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\config\config.chatter.js" />
     <Content Include="Scripts\app\controllers\ctrl.chat.js" />
     <Content Include="Scripts\app\controllers\ctrl.demo.js" />
     <Content Include="Scripts\app\controllers\ctrl.home.js" />
