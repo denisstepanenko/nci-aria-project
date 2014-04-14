@@ -24,7 +24,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	                        // Initiate a call!
 	                        var call = $rootScope.peer.call(callerPeerID, window.localStream);
 
-	                        step3(call);
+	                        step3(call, scope);
 	                        
 	                        //get the user and show their chat hisotry and video window
 	                        $http.get("/api/user/GetMyFriend", {
@@ -276,10 +276,12 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 	        // Receiving a call
 	        $rootScope.peer.on('call', function (call) {
-	            // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
-	            call.answer(window.localStream);
+	            $scope.$apply(function (scope) {
+	                // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
+	                call.answer(window.localStream);
 
-	            step3(call);
+	                step3(call, scope);
+	            });
 	        });
 
 	        $rootScope.peer.on('error', function (err) {
@@ -306,8 +308,8 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    function step3(call) {
-	        $scope.$apply(function (scope) {
+	    function step3(call, scope) {
+	        
 	            scope.videoError = "";
 
 	            // Hang up on an existing call if present
@@ -332,7 +334,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	                //informs the user that they have to allow the use of webcam through the browser
 	                scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
 	            }
-	        });
+	        
 	    }
         //END PEERJS STUFF
 	}]);
