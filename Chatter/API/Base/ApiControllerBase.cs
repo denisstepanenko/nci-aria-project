@@ -14,10 +14,7 @@ namespace Chatter.API.Base
     {
         public ApiControllerBase()
         {
-            if (System.Web.HttpContext.Current.Request.IsAuthenticated)
-            {
-                CurrentUser = db.Users.Where(u => u.Email == System.Web.HttpContext.Current.User.Identity.Name).FirstOrDefault();
-            }
+            CurrentUser = Utils.Utils.GetCurrentUser();
         }
 
         private ConceptualModelContainer db = new ConceptualModelContainer();

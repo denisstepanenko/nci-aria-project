@@ -19,14 +19,14 @@ namespace Chatter.SignalR
         //the server will redirect that call to a user if that user is online, otherwise will return false right away
         //if the user is online, they will be notified of the call request and if they decide to accept the call, they will use
         //that token to call the requestor using peerjs.
-
+              
         private ConceptualModelContainer db = new ConceptualModelContainer();
-
-        private int currentlyLoggedUserID = 1;//TODO: fix after authentication is done
 
         public void ImOnline()
         {
-            var user = db.Users.Where(u => u.Id == currentlyLoggedUserID).FirstOrDefault();
+            var currentUser = Utils.Utils.GetCurrentUser();//can't make it a class level due to the funny way this hub is initialized
+            var user = db.Users.Where(u => u.Id == currentUser.Id).FirstOrDefault();
+
             user.ConnectionID = Context.ConnectionId;
 
             db.SaveChanges();
@@ -56,13 +56,22 @@ namespace Chatter.SignalR
 
         private User GetDestinationUser(int destUserID)
         {
-            //check if there is a link between a current user and the destination user
-            var user = (from u in db.Users
-                        join f in db.Friends on u.Id equals f.FriendUserID
-                        where u.Id == currentlyLoggedUserID && f.FriendUserID == destUserID
-                        select u).FirstOrDefault();
+            User user = null;
+            try
+            {
+
+                var currentUser = Utils.Utils.GetCurrentUser();//can't make it a class level due to the funny way this hub is initialized
+                //check if there is a link between a current user and the destination user
+                
+                var friendUser = db.Friends.Where(f => f.UserID == currentUser.Id && f.FriendUserID == destUserID).FirstOrDefault();
+                user = db.Users.Where(u => u.Id == friendUser.FriendUserID).FirstOrDefault();                                
+            }
+            catch
+            {
+                user = null;
+            }
 
             return user;
-        }
+        }      
     }
 }

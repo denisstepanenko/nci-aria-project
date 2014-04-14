@@ -67,14 +67,37 @@ namespace Chatter.API.Controllers
                     Nickname = googleIdentity.name
                 };
 
-                db.Users.Add(user);
-                db.SaveChanges();
+                db.Users.Add(user);                
             }
+            else
+            {
+                user.Email = googleIdentity.email;
+                user.FirstName = googleIdentity.given_name;
+                user.LastName = googleIdentity.family_name;
+                user.Nickname = googleIdentity.name;                
+            }
+            db.SaveChanges();
 
             googleIdentity.userId = user.Id;
 
             return googleIdentity;            
         }
 
+        [HttpGet]
+        [HttpPost]
+        public HttpResponseMessage Logout()
+        {
+            //return new HttpResponseMessage(HttpStatusCode.OK)
+            //{
+            //    Content = new ObjectContent<object>(new
+            //    {
+            //        UserName = User.Identity.Name
+            //    }, Configuration.Formatters.JsonFormatter)
+            //};
+
+            FormsAuthentication.SignOut();
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }

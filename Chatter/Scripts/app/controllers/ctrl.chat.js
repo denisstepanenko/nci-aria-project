@@ -15,7 +15,45 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    var localPeerID;
+	    var initSignalR = function () {        	        
+	        $.connection.chatHub.client.incomingCall = function (callerPeerID) {
+	            //the call recipient should handle incoming call request here
+	            if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
+	                // Initiate a call!
+	                var call = $rootScope.peer.call(callerPeerID, window.localStream);
+
+	                step3(call);
+	            }
+	        }
+
+	        $.connection.chatHub.client.incomingTextMessage = function (message) {
+	            $scope.$apply(function (scope) {	                
+	                //the recipient should handle incoming text message request here
+	                alert(message);
+
+	                //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
+
+	                if (scope.activeFriend) {
+	                    //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
+	                    scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: scope.activeFriend.name });
+	                }
+	            });
+	        }
+
+	        // Start the connection.
+	        $.connection.hub.start().done(function () {
+	            $.connection.chatHub.server.imOnline();
+	        }).fail(function (e1, e2, e3, e4) {
+	            $scope.$apply(function (scope) {
+
+	                console.log(err.message);
+	                scope.videoError = "Error ocurred, please try again...";
+	                console.log("chathub error..");
+	            });
+	        });
+	    }
+
+	    $rootScope.localPeerID;
            
 	    //END PRIVATE STUFF
 
@@ -62,37 +100,9 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            initializeBrowserVideo();
 	        });
 
-            //the SignalR init and callback handlers should be declared in init as otherwise they will end up in a different $scope
-	        $.connection.chatHub.client.incomingCall = function (callerPeerID) {
-	            //the call recipient should handle incoming call request here
-	            if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
-	                // Initiate a call!
-	                var call = peer.call(callerPeerID, window.localStream);
+	        initSignalR();
 
-	                step3(call);
-	            }
-	        }
-
-	        $.connection.chatHub.client.incomingTextMessage = function (message) {
-	            //the recipient should handle incoming text message request here
-	            alert(message);
-
-	            //TODO: work on receiving the messages, need to ensure that the user is notified and that the message is added to the active user message list. 
-
-	            if ($scope.activeFriend) {
-	                //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
-	                $scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: $scope.activeFriend.name });
-	            }
-	        }
-
-	        // Start the connection.
-	        $.connection.hub.start().done(function () {
-	            $.connection.chatHub.server.imOnline();
-	        }).fail(function (e1, e2, e3, e4) {
-	            console.log(err.message);
-	            $scope.videoError = "Error ocurred, please try again...";
-	            console.log("chathub error..");
-	        });
+	        initPeerJs();
 	    }
 	    
 	    $scope.findFriends = function () {	        
@@ -170,7 +180,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        }
 
 	        //send the call request
-	        $.connection.chatHub.server.callRequest(friend.id, localPeerID);
+	        $.connection.chatHub.server.callRequest(friend.id, $rootScope.localPeerID);
 
 	        $scope.activeCallUser = friend;
 	    }
@@ -226,38 +236,41 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 
 	    //PEERJS STUFF  
+	    function initPeerJs() {
+	        // PeerJS object
+	        $rootScope.peer = new Peer({
+	            key: ChatterConfig.PeerJSApiKey, debug: 3, config: {
+	                'iceServers': [
+                      { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
+	                ]
+	            }
+	        });
 
-	    // Compatibility shim
-	    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+	        $rootScope.peer.on('open', function () {
+	            $rootScope.localPeerID = $rootScope.peer.id;
+	        });
 
-	    // PeerJS object
-	    var peer = new Peer({
-	        key: ChatterConfig.PeerJSApiKey, debug: 3, config: {
-	            'iceServers': [
-                  { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
-	            ]
-	        }
-	    });
+	        // Receiving a call
+	        $rootScope.peer.on('call', function (call) {
+	            // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
+	            call.answer(window.localStream);
 
-	    peer.on('open', function () {
-	        localPeerID = peer.id;
-	    });
+	            step3(call);
+	        });
 
-	    // Receiving a call
-	    peer.on('call', function (call) {
-	        // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
-	        call.answer(window.localStream);
+	        $rootScope.peer.on('error', function (err) {
+	            $scope.$apply(function (scope) {
+	                console.log(err.message);
+	                scope.videoError = "Error ocurred, please try again...";
+	                console.log("peerjs error..");
+	            });
+	        });
+	    }
 
-	        step3(call);
-	    });
+	    window.initializeBrowserVideo = function () {
+	        // Compatibility shim
+	        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-	    peer.on('error', function (err) {	        
-	        console.log(err.message);
-	        $scope.videoError = "Error ocurred, please try again...";
-	        console.log("peerjs error..");
-	    });
-        
-	    function initializeBrowserVideo() {
 	        // Get audio/video stream
 	        navigator.getUserMedia({ audio: true, video: true }, function (stream) {
 	            // Set your video displays
@@ -270,30 +283,32 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	    }
 
 	    function step3(call) {
-	        $scope.videoError = "";
+	        $scope.$apply(function (scope) {
+	            scope.videoError = "";
 
-	        // Hang up on an existing call if present
-	        if (window.existingCall) {
-	            window.existingCall.close();
-	        }
+	            // Hang up on an existing call if present
+	            if (window.existingCall) {
+	                window.existingCall.close();
+	            }
 
-            //call could be null if the user didn't allow to use the webcam in the browser
-	        if (call) {
-	            // Wait for stream on the call, then set peer video display
-	            call.on('stream', function (stream) {
-	                $('#their-video').prop('src', URL.createObjectURL(stream));
-	            });
+	            //call could be null if the user didn't allow to use the webcam in the browser
+	            if (call) {
+	                // Wait for stream on the call, then set peer video display
+	                call.on('stream', function (stream) {
+	                    $('#their-video').prop('src', URL.createObjectURL(stream));
+	                });
 
-	            // UI stuff
-	            window.existingCall = call;
-	            call.on('close', function () {
-	                //TODO: add call ended notification
-	            });
-	        }
-	        else {
-	            //informs the user that they have to allow the use of webcam through the browser
-	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
-	        }
+	                // UI stuff
+	                window.existingCall = call;
+	                call.on('close', function () {
+	                    //TODO: add call ended notification
+	                });
+	            }
+	            else {
+	                //informs the user that they have to allow the use of webcam through the browser
+	                scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
+	            }
+	        });
 	    }
         //END PEERJS STUFF
 	}]);
