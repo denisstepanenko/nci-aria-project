@@ -211,11 +211,11 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 	        if ($scope.activeCallUser) {
 	            $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
+
+	            toastr.info('Call ended');//only show notice if call was acually ended
 	        }
 
-	        $scope.activeCallUser = null;
-
-	        toastr.info('Call ended')
+	        $scope.activeCallUser = null;	        
 	    }
 
 	    $scope.removeFriend = function (friend) {            
