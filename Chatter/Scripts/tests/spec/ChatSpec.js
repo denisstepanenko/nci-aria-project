@@ -22,6 +22,12 @@ describe("ChatController", function () {
                 $log: null
             });
             
+            $httpBackend.expectGET("/api/user/FindMyFriends?pageNumber=1&pageSize=10&searchCriteria=all")
+                .respond({ data: [{ name: 'test1' }, { name: 'test2' }, { name: 'test3' }], totalItems: 3 });
+
+            $scope.init();
+
+            $httpBackend.flush();
     }));
 
     it("Get Friends", function () {
@@ -94,11 +100,13 @@ describe("ChatController", function () {
     it("Should not call a friend as they are currently talking that same friend", function () {
         var friend = { id: 1 };
         var serverObj = spyOn($.connection.chatHub.server, 'sendTextMessage');
+        var initVideoSpy = spyOn(window, "initializeBrowserVideo");
 
         $scope.activeCallUser = friend;
 
         $scope.callFriend(friend);
 
+        expect(initVideoSpy).toHaveBeenCalled();
         expect(serverObj).not.toHaveBeenCalled();
     });
 
@@ -217,6 +225,43 @@ describe("ChatController", function () {
 
         expect(spy).toHaveBeenCalled();
         expect($scope.selectedTab).toEqual(1);
+    });
+
+    it("Should send a call termination request to other party", function () {
+        var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
+        var toastrSpy = spyOn(toastr, "info");
+
+        $scope.activeCallUser = { id: 1 };
+
+        $scope.endCall();
+              
+        expect(serverObj).toHaveBeenCalled();
+        expect(toastrSpy).toHaveBeenCalled();
+
+        expect($scope.activeCallUser).toBe(null);
+    });
+
+    it("Should not send a call termination request to other party", function () {
+        var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
+        var toastrSpy = spyOn(toastr, "info");
+               
+        $scope.activeCallUser = null;
+
+        $scope.endCall();
+        
+        expect(serverObj).not.toHaveBeenCalled();
+        expect(toastrSpy).not.toHaveBeenCalled();
+
+        expect($scope.activeCallUser).toBe(null);
+    });
+
+    it("Should terminate a call when a call end request comes in", function () {
+      
+        var spyEndCall = spyOn($scope, "endCall");
+
+        $.connection.chatHub.client.callEndRequest();        
+
+        expect(spyEndCall).toHaveBeenCalled();
     });
 
 });
