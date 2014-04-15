@@ -45,15 +45,16 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	                });
 	            }
 
-	            $.connection.chatHub.client.incomingTextMessage = function (message) {
+	            $.connection.chatHub.client.incomingTextMessage = function (message, senderID, senderFullName) {
 	                $scope.$apply(function (scope) {
 	                    //the recipient should handle incoming text message request here
 	                    
-	                    toastr.success(message);
-                        
-	                    if (scope.activeFriend) {
+	                    if (scope.activeFriend && scope.activeFriend.id == senderID) {
 	                        //Don't need to worry about inactive users because as soon as the user clicks on another user, the message list will be retrieved fromt he server. 
 	                        scope.activeFriend.messageHistory.push({ message: message, datePosted: (new Date()).toDateString(), senderName: scope.activeFriend.name });
+	                    }
+	                    else {
+	                        toastr.success(senderFullName + " says \"" + message + "\"");
 	                    }
 	                });
 	            }
@@ -180,7 +181,9 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        });
 	    }
 
-	    $scope.callFriend = function (friend) {            
+	    $scope.callFriend = function (friend) {
+	        window.initializeBrowserVideo();
+            
 	        if ($scope.activeCallUser) {
 	            if ($scope.activeCallUser.id == friend.id) {
 	                //user is trying to call the friend that they're currently talking to
@@ -211,11 +214,11 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 	        if ($scope.activeCallUser) {
 	            $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
+
+	            toastr.info('Call ended');//only show notice if call was acually ended
 	        }
 
-	        $scope.activeCallUser = null;
-
-	        toastr.info('Call ended')
+	        $scope.activeCallUser = null;	        
 	    }
 
 	    $scope.removeFriend = function (friend) {            
@@ -303,11 +306,12 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        // Get audio/video stream
 	        navigator.getUserMedia({ audio: true, video: true }, function (stream) {
 	            // Set your video displays
-	            $('#my-video').prop('src', URL.createObjectURL(stream));
+	            $('#my-video').show().prop('src', URL.createObjectURL(stream));
 
 	            window.localStream = stream;	            
 	        }, function () {
-	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
+	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed to access the webcam and try again";
+	            $('#my-video').hide();
 	        });
 	    }
 

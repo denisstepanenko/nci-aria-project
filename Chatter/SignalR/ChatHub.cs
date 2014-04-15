@@ -62,10 +62,12 @@ namespace Chatter.SignalR
         public void SendTextMessage(int destUserID, string message)
         {
             var user = GetDestinationUser(destUserID);
+            var currentUser = Utils.Utils.GetCurrentUser();
 
             if (user != null)
             {
-                Clients.Client(user.ConnectionID).incomingTextMessage(message);
+                var senderFullName = currentUser.FirstName + " " + currentUser.LastName;
+                Clients.Client(user.ConnectionID).incomingTextMessage(message, currentUser.Id, senderFullName);
             }
 
         }
