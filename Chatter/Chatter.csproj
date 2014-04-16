@@ -186,6 +186,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Attributes\CheckXrfHeaderAttribute.cs" />
     <Compile Include="API\Base\ApiControllerBase.cs" />
     <Compile Include="API\Controllers\AuthController.cs" />
     <Compile Include="API\Controllers\UserController.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="API\DTOs\PostTextMessageDTO.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Auth\GoogleIdentity.cs" />
+    <Compile Include="Auth\XSRFTokenHelper.cs" />
     <Compile Include="Data\DAL\GenericController.cs" />
     <Compile Include="Data\Models\ChatHistory.cs">
       <DependentUpon>ConceptualModel.tt</DependentUpon>

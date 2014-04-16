@@ -1,14 +1,10 @@
-﻿using Chatter.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using Chatter.API.Attributes;
+using Chatter.Data.Models;
 using System.Web.Http;
-using System.Web.Security;
 
 namespace Chatter.API.Base
 {
+    [CheckXrfHeader]
     [Authorize]
     public class ApiControllerBase : ApiController
     {
