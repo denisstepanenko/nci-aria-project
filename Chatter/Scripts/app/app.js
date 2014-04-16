@@ -37,7 +37,7 @@ chatterApp.config(['$locationProvider', '$routeProvider',
   }]);
 
 //Authorisation 
-chatterApp.run(function($rootScope, $location, $http) {
+chatterApp.run(function ($rootScope, $location, $http, $log) {
 
   
     $rootScope.userInfo = {};
