@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
-using Chatter.API.DTOs;
 using Chatter.Auth;
 using Chatter.Data.Models;
 using System.Web.Security;
@@ -34,7 +33,7 @@ namespace Chatter.API.Controllers
             {
                 using (var receiveStream = responseUserInfo.GetResponseStream())
                 {
-                    var encode = System.Text.Encoding.GetEncoding("utf-8");
+                    var encode = Encoding.GetEncoding("utf-8");
                     if (receiveStream != null)
                     {
                         using (var readStream = new StreamReader(receiveStream, encode))
@@ -49,14 +48,24 @@ namespace Chatter.API.Controllers
 
             //get user from the ASP.NET Membership Provider. Here we'll assume that the user's username is their email address
             //in real world scenario this would be different in that there would be a memberhsip provider table used for OAuth authentication
-            MembershipUser aspUser = Membership.GetUser(googleIdentity.email);
-            if (aspUser == null)
-            {
-                aspUser = Membership.CreateUser(googleIdentity.email, googleIdentity.id, googleIdentity.email);
-            }
+            if (googleIdentity == null) return null;
+
+            var aspUser = Membership.GetUser(googleIdentity.email) ??
+                          Membership.CreateUser(googleIdentity.email, googleIdentity.id, googleIdentity.email);
+
             FormsAuthentication.SetAuthCookie(aspUser.UserName, true);
-            
-            User user = db.Users.Where(u => u.Email.Equals(googleIdentity.email, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+            var authCookie = HttpContext.Current.Response.Cookies.Get(".ASPXAUTH");
+
+            if (authCookie != null)
+            {
+                var csrfToken = new XSRFTokenHelper().GetXsrfTokenFromAuthToken(authCookie.Value);
+                var csrfCookie = new HttpCookie("XSRF-TOKEN", csrfToken) { HttpOnly = false };
+                HttpContext.Current.Response.Cookies.Add(csrfCookie);
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Email.Equals(googleIdentity.email, StringComparison.OrdinalIgnoreCase));
+
             if (null == user)
             {
                 user = new User()
@@ -67,7 +76,7 @@ namespace Chatter.API.Controllers
                     Nickname = googleIdentity.name
                 };
 
-                db.Users.Add(user);                
+                db.Users.Add(user);
             }
             else
             {
@@ -96,6 +105,8 @@ namespace Chatter.API.Controllers
             //};
 
             FormsAuthentication.SignOut();
+
+            HttpContext.Current.Response.Cookies.Remove("XSRF-TOKEN");
 
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
