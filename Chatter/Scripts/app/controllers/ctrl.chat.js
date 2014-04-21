@@ -207,6 +207,12 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        $scope.activeCallUser = friend;
 	    }
 
+	    $scope.callFriendRetry = function () {            
+	        $scope.endCall();
+	        $scope.callFriend($scope.activeFriend);
+	        $scope.$apply();//force to rerender the view as $scope.activeCallUser has changed.
+	    }
+
 	    $scope.endCall = function () {
 	        if (window.existingCall) {
 	            window.existingCall.close();

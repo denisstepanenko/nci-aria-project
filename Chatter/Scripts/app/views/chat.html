@@ -113,7 +113,7 @@
                             <div class="" id="video-container" ng-show="activeCallUser">                           
                                 <div class="alert alert-danger" ng-show="videoError" >
                                     {{videoError}}
-                                    <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
+                                    <button class="btn btn-default" ng-click="callFriendRetry()">Retry...</button>
                                 </div>
 
                                 <video id="their-video" autoplay="autoplay"></video>

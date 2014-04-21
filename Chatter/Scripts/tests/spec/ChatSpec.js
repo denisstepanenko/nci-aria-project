@@ -28,7 +28,7 @@ describe("ChatController", function () {
             $scope.init();
 
             $httpBackend.flush();
-    }));
+        }));
 
     it("Get Friends", function () {
         $scope.friendSearchCriteria = 'test';
@@ -138,6 +138,18 @@ describe("ChatController", function () {
         expect(signalrSpy).toHaveBeenCalled();
         expect(endCallSpy).toHaveBeenCalled();
         expect($scope.activeCallUser).toBe(friend2);
+    });
+
+    it("Should end the call, and then callback the same user", function () {
+        var endCallSpy = spyOn($scope, 'endCall');
+        var startCallSpy = spyOn($scope, 'callFriend');
+
+        $scope.activeFriend = {};
+
+        $scope.callFriendRetry();
+
+        expect(endCallSpy).toHaveBeenCalled();
+        expect(startCallSpy).toHaveBeenCalledWith($scope.activeFriend);
     });
 
     it("Should remove a friend from My Friends list (user didn't confirm)", function () {

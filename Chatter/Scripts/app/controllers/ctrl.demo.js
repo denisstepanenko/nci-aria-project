@@ -5,7 +5,7 @@
 
 	    // PeerJS object
 	    var peer = new Peer({
-	        key: 'lwjd5qra8257b9', debug: 3, config: {
+	        key: 'qlruuc30bv5cdi', debug: 3, config: {
 	            'iceServers': [
                   { url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
 	            ]

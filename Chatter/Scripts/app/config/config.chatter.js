@@ -1,3 +1,3 @@
 ﻿configs.value('ChatterConfig', {
-    PeerJSApiKey: 'qlruuc30bv5cdi'
+    PeerJSApiKey: 'fnop5dztyv6lxr'
 });
