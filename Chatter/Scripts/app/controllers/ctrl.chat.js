@@ -317,7 +317,16 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        }
 
 	        // Get audio/video stream
-	        navigator.getUserMedia({ audio: true, video: true }, function (stream) {
+	        navigator.getUserMedia({
+	            audio: true,
+	            video: {
+	                "mandatory": {
+	                    "minWidth": "320",
+	                    "minHeight": "240",
+	                },
+	                "optional": []
+	            }
+	        }, function (stream) {
 	            // Set your video displays
 	            $('#my-video').show().prop('src', URL.createObjectURL(stream));
 
