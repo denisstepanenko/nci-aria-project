@@ -13,7 +13,7 @@
     </div>
     <div class="container">
         <!-- Example row of columns -->
-        <div class="row">
+        <div class="row" ng-show="!browserIncompatible">
             <div class="col-md-5">
 
                 <div class="friends panel panel-default">
@@ -116,8 +116,8 @@
                                     <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
                                 </div>
 
-                                <video id="their-video" autoplay></video>
-                                <video id="my-video" muted="muted" autoplay></video>
+                                <video id="their-video" autoplay="autoplay"></video>
+                                <video id="my-video" muted="muted" autoplay="autoplay"></video>
 
                             </div>
 
@@ -161,7 +161,11 @@
 
         </div>
 
-
+        <div class="row" ng-show="browserIncompatible">
+            <div class="alert alert-danger">
+                Your browser can't use the webcam or audio, please upgrade your browser to the latest version or download latest Chrome or Firefox.
+            </div>
+        </div>
 
         <hr>
 

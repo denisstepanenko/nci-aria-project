@@ -27,10 +27,10 @@ chatterApp.config(['$locationProvider', '$routeProvider',
                templateUrl: '/Scripts/app/views/login.html',
                controller: 'LoginCtrl'
            }).        
-          //when("/demo", {
-          //    templateUrl: '/Scripts/app/views/demo.html',
-          //    controller: 'DemoCtrl'
-          //}).          
+          when("/demo", {
+              templateUrl: '/Scripts/app/views/demo.html',
+              controller: 'DemoCtrl'
+          }).          
         otherwise({
             redirectTo: '/'
         });

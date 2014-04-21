@@ -227,16 +227,31 @@ describe("ChatController", function () {
         expect($scope.selectedTab).toEqual(1);
     });
 
-    it("Should send a call termination request to other party", function () {
+    it("Should send a call termination request to other party and show the toast", function () {
+        var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
+        var toastrSpy = spyOn(toastr, "info");
+
+        window.existingCall = {};
+        $scope.activeCallUser = { id: 1 };
+
+        $scope.endCall();
+              
+        expect(serverObj).toHaveBeenCalled();
+        expect(toastrSpy).toHaveBeenCalled();//only should be shown if window.existingCall is set
+        
+        expect($scope.activeCallUser).toBe(null);
+    });
+
+    it("Should send a call termination request to other party and not show the toast", function () {
         var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
         var toastrSpy = spyOn(toastr, "info");
 
         $scope.activeCallUser = { id: 1 };
 
         $scope.endCall();
-              
+
         expect(serverObj).toHaveBeenCalled();
-        expect(toastrSpy).toHaveBeenCalled();
+        expect(toastrSpy).not.toHaveBeenCalled();//only should be shown if window.existingCall is set
 
         expect($scope.activeCallUser).toBe(null);
     });
