@@ -231,7 +231,7 @@ describe("ChatController", function () {
         var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
         var toastrSpy = spyOn(toastr, "info");
 
-        window.existingCall = {};
+        window.existingCall = { close: function () { } };
         $scope.activeCallUser = { id: 1 };
 
         $scope.endCall();
@@ -246,6 +246,7 @@ describe("ChatController", function () {
         var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
         var toastrSpy = spyOn(toastr, "info");
 
+        window.existingCall = undefined;
         $scope.activeCallUser = { id: 1 };
 
         $scope.endCall();
