@@ -14,7 +14,7 @@
     <div class="container">
         <!-- Example row of columns -->
         <div class="row" ng-show="!browserIncompatible">
-            <div class="col-md-5">
+            <div class="col-md-4">
 
                 <div class="friends panel panel-default">
                     <div class="">
@@ -53,16 +53,10 @@
                                             <span class="remove-friend badge pull-right" ng-click="removeFriend(friend)">Remove</span>    
                                             <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
                                         </a>
-
                                     </li>
                                 </ul>
-
-                                <div class="pager">
-                                    <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
                                 </div>
-
                             </div>
-                        </div>
 
                         <!--Non-Friends Search-->
                         <div class="friend-search" ng-show="selectedTab==2">
@@ -86,10 +80,6 @@
                                         </a>                                        
                                     </li>
                                 </ul>
-
-                                <div class="pager">
-                                    <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,8 +88,7 @@
 
             </div>
 
-
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <!--CHAT AREA-->
 
                 <div class="chat-area" ng-show="activeFriend">
@@ -108,23 +97,6 @@
                             <label>{{activeFriend.name}}</label>
                         </div>
                         
-                        <div class="video">
-                            <!-- Video area -->
-                            <div class="" id="video-container" ng-show="activeCallUser">                           
-                                <div class="alert alert-danger" ng-show="videoError" >
-                                    {{videoError}}
-                                    <button class="btn btn-default" ng-click="callFriendRetry()">Retry...</button>
-                                </div>
-
-                                <video id="their-video" autoplay="autoplay"></video>
-                                <video id="my-video" muted="muted" autoplay="autoplay"></video>
-
-                            </div>
-
-                            <button class="btn btn-success" ng-click="callFriend(activeFriend)">Call</button>                            
-                            <button class="btn btn-danger" ng-click="endCall()">End Call</button>
-                        </div>
-
                         <div class="messages">
                             <div class="list-group">
                                 <div class="scrollable">
@@ -138,12 +110,6 @@
                                     </a>
                                 </div>
                             </div>
-
-                            <div class="pager">
-                                <pagination total-items="chatHistoryPaginationData.totalItems" ng-model="chatHistoryPaginationData.currentPage" 
-                                    max-size="chatHistoryPaginationData.maxPageNumers" items-per-page="chatHistoryPaginationData.itemsPerPage" 
-                                    ng-change="chatHistoryPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
-                            </div>
                         </div>
 
 
@@ -154,6 +120,34 @@
                         <div class="new-message form-group">
                             <textarea class="form-control validate[required]" rows="3" ng-model="textMessage"  ng-trim="true"></textarea>
                             <button ng-click="sendTextMessage()" class="form-control btn btn-primary pull-right">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!--CHAT AREA-->
+
+                <div class="chat-area" ng-show="activeFriend">
+                    <div class="friends panel panel-default">                        
+                        <div class="video">
+                            <!-- Video area -->
+                            <div class="" id="video-container" ng-show="activeCallUser">                           
+                                <div class="alert alert-danger" ng-show="videoError" >
+                                    {{videoError}}
+                                    <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
+                                </div>
+
+                                <video id="their-video" autoplay></video>
+                                <video id="my-video" muted="muted" autoplay></video>
+                            </div>
+
+
+                            <div class="pager">
+                                <button class="btn btn-success" ng-click="callFriend(activeFriend)">Call</button>                            
+                                <button class="btn btn-danger" ng-click="endCall()">End Call</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
