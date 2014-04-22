@@ -14,7 +14,7 @@
     <div class="container">
         <!-- Example row of columns -->
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
 
                 <div class="friends panel panel-default">
                     <div class="">
@@ -98,31 +98,13 @@
 
             </div>
 
-
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <!--CHAT AREA-->
 
                 <div class="chat-area" ng-show="activeFriend">
                     <div class="friends panel panel-default">
                         <div class="panel-heading">Chat History:
                             <label>{{activeFriend.name}}</label>
-                        </div>
-                        
-                        <div class="video">
-                            <!-- Video area -->
-                            <div class="" id="video-container" ng-show="activeCallUser">                           
-                                <div class="alert alert-danger" ng-show="videoError" >
-                                    {{videoError}}
-                                    <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
-                                </div>
-
-                                <video id="their-video" autoplay></video>
-                                <video id="my-video" muted="muted" autoplay></video>
-
-                            </div>
-
-                            <button class="btn btn-success" ng-click="callFriend(activeFriend)">Call</button>                            
-                            <button class="btn btn-danger" ng-click="endCall()">End Call</button>
                         </div>
 
                         <div class="messages">
@@ -154,6 +136,31 @@
                         <div class="new-message form-group">
                             <textarea class="form-control validate[required]" rows="3" ng-model="textMessage"  ng-trim="true"></textarea>
                             <button ng-click="sendTextMessage()" class="form-control btn btn-primary pull-right">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!--CHAT AREA-->
+
+                <div class="chat-area" ng-show="activeFriend">
+                    <div class="friends panel panel-default">                        
+                        <div class="video">
+                            <!-- Video area -->
+                            <div class="" id="video-container" ng-show="activeCallUser">                           
+                                <div class="alert alert-danger" ng-show="videoError" >
+                                    {{videoError}}
+                                    <button class="btn btn-default" ng-click="endCall();callFriend(activeFriend);">Retry...</button>
+                                </div>
+
+                                <video id="their-video" autoplay></video>
+                                <video id="my-video" muted="muted" autoplay></video>
+
+                            </div>
+
+                            <button class="btn btn-success" ng-click="callFriend(activeFriend)">Call</button>                            
+                            <button class="btn btn-danger" ng-click="endCall()">End Call</button>
                         </div>
                     </div>
                 </div>
