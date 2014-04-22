@@ -20,7 +20,7 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	            $.connection.chatHub.client.incomingCall = function (callerPeerID, callerUserID) {
 	                $scope.$apply(function (scope) {
 	                    //the call recipient should handle incoming call request here
-	                    if (confirm("Incomming call, answer? (" + callerPeerID + ")")) {
+	                    if (confirm("Incomming call, answer?")) {
 	                        // Initiate a call!
 	                        var call = $rootScope.peer.call(callerPeerID, window.localStream);
 
@@ -207,15 +207,28 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        $scope.activeCallUser = friend;
 	    }
 
+	    $scope.callFriendRetry = function () {            
+	        $scope.endCall();
+	        $scope.callFriend($scope.activeFriend);
+	        $scope.$apply();//force to rerender the view as $scope.activeCallUser has changed.
+	    }
+
 	    $scope.endCall = function () {
 	        if (window.existingCall) {
 	            window.existingCall.close();
 	        }
 
 	        if ($scope.activeCallUser) {
-	            $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
+	            try{
+	                $.connection.chatHub.server.callTerminated($scope.activeCallUser.id)
+	            }
+	            catch (ex) {
+	                console.log("error sending callTErminated request");
+	            }
 
-	            toastr.info('Call ended');//only show notice if call was acually ended
+	            if (window.existingCall) {
+	                toastr.info('Call ended');//only show notice if call was acually ended
+	            }
 	        }
 
 	        $scope.activeCallUser = null;	        
@@ -282,12 +295,13 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 
 	        // Receiving a call
 	        $rootScope.peer.on('call', function (call) {
-	            $scope.$apply(function (scope) {
-	                // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
-	                call.answer(window.localStream);
+	            // answer the call automatically as the incomming call dialog will be shown when incomming call from SignalR function is triggered
+	            call.answer(window.localStream);
 
+	            $scope.$apply(function (scope) {
 	                step3(call, scope);
 	            });
+	            //step3(call, $scope);
 	        });
 
 	        $rootScope.peer.on('error', function (err) {
@@ -303,45 +317,65 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
 	        // Compatibility shim
 	        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
+	        if (!navigator.getUserMedia) {
+	            $scope.browserIncompatible = true;
+	            return;
+	        }
+
 	        // Get audio/video stream
-	        navigator.getUserMedia({ audio: true, video: true }, function (stream) {
+	        navigator.getUserMedia({
+	            audio: true,
+	            video: {
+	                "mandatory": {
+	                    "minWidth": "320",
+	                    "minHeight": "240",
+	                },
+	                "optional": []
+	            }
+	        }, function (stream) {
 	            // Set your video displays
 	            $('#my-video').show().prop('src', URL.createObjectURL(stream));
 
 	            window.localStream = stream;	            
-	        }, function () {
+	        }, function (e) {
 	            $scope.videoError = "Cannot get video stream, please ensure browser is allowed to access the webcam and try again";
 	            $('#my-video').hide();
 	        });
 	    }
 
 	    function step3(call, scope) {
-	        
-	            scope.videoError = "";
 
-	            // Hang up on an existing call if present
-	            if (window.existingCall) {
-	                window.existingCall.close();
-	            }
+	        scope.videoError = "";
 
-	            //call could be null if the user didn't allow to use the webcam in the browser
-	            if (call) {
-	                // Wait for stream on the call, then set peer video display
-	                call.on('stream', function (stream) {
-	                    $('#their-video').prop('src', URL.createObjectURL(stream));
-	                });
+	        // Hang up on an existing call if present
+	        if (window.existingCall) {
+	            window.existingCall.close();
+	        }
 
-	                // UI stuff
-	                window.existingCall = call;
-	                call.on('close', function () {
-	                    //TODO: add call ended notification
-	                });
-	            }
-	            else {
-	                //informs the user that they have to allow the use of webcam through the browser
-	                scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
-	            }
-	        
+	        //call could be null if the user didn't allow to use the webcam in the browser
+	        if (call) {
+	            // Wait for stream on the call, then set peer video display
+	            call.on('stream', function (stream) {
+	                $('#their-video').attr('src', URL.createObjectURL(stream));
+	            });
+
+	            call.on("error", function (e) {
+	                debugger
+	            });
+
+	            // UI stuff
+	            window.existingCall = call;
+	            call.on('close', function () {
+	                if (scope.activeCallUser) {//in case call dropped
+	                    toastr.info('Call ended');
+	                }
+	            });
+	        }
+	        else {
+	            //informs the user that they have to allow the use of webcam through the browser
+	            scope.videoError = "Cannot get video stream, please ensure browser is allowed access the webcam and try again";
+	        }
+
 	    }
         //END PEERJS STUFF
 	}]);

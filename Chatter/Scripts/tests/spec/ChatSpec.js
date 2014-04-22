@@ -28,7 +28,7 @@ describe("ChatController", function () {
             $scope.init();
 
             $httpBackend.flush();
-    }));
+        }));
 
     it("Get Friends", function () {
         $scope.friendSearchCriteria = 'test';
@@ -140,6 +140,18 @@ describe("ChatController", function () {
         expect($scope.activeCallUser).toBe(friend2);
     });
 
+    it("Should end the call, and then callback the same user", function () {
+        var endCallSpy = spyOn($scope, 'endCall');
+        var startCallSpy = spyOn($scope, 'callFriend');
+
+        $scope.activeFriend = {};
+
+        $scope.callFriendRetry();
+
+        expect(endCallSpy).toHaveBeenCalled();
+        expect(startCallSpy).toHaveBeenCalledWith($scope.activeFriend);
+    });
+
     it("Should remove a friend from My Friends list (user didn't confirm)", function () {
         var userToDelete = { id: 1 };
         var userToBePresent={ id: 2 };
@@ -227,16 +239,32 @@ describe("ChatController", function () {
         expect($scope.selectedTab).toEqual(1);
     });
 
-    it("Should send a call termination request to other party", function () {
+    it("Should send a call termination request to other party and show the toast", function () {
         var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
         var toastrSpy = spyOn(toastr, "info");
 
+        window.existingCall = { close: function () { } };
         $scope.activeCallUser = { id: 1 };
 
         $scope.endCall();
               
         expect(serverObj).toHaveBeenCalled();
-        expect(toastrSpy).toHaveBeenCalled();
+        expect(toastrSpy).toHaveBeenCalled();//only should be shown if window.existingCall is set
+        
+        expect($scope.activeCallUser).toBe(null);
+    });
+
+    it("Should send a call termination request to other party and not show the toast", function () {
+        var serverObj = spyOn($.connection.chatHub.server, 'callTerminated');
+        var toastrSpy = spyOn(toastr, "info");
+
+        window.existingCall = undefined;
+        $scope.activeCallUser = { id: 1 };
+
+        $scope.endCall();
+
+        expect(serverObj).toHaveBeenCalled();
+        expect(toastrSpy).not.toHaveBeenCalled();//only should be shown if window.existingCall is set
 
         expect($scope.activeCallUser).toBe(null);
     });

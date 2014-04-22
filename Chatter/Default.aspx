@@ -12,7 +12,7 @@
 </head>
 <body>
     <div style="display: none;" ng-app="directive.googlePlusAuth">
-        <google-plus-auth clientid="539619638814-bc68fotft1msfr537c0ckpdsctshn5ls.apps.googleusercontent.com"></google-plus-auth>
+        <google-plus-auth clientid="1010812378845-5p0490hr5lksssl20n2fj01plb185rpc.apps.googleusercontent.com"></google-plus-auth>
     </div>
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -29,7 +29,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/">Home</a></li>
-                    <li><a href="#chat">Chat</a></li>
+                    <li ng-show="loggedOn"><a href="#chat">Chat</a></li>
                     <%--<li><a href="#demo">Demo</a></li>--%>
 
                     <li ng-show="!loggedOn"><a href="#login">Login</a></li>

@@ -57,22 +57,31 @@ namespace Chatter.API.Controllers
         public void AddToFriends(AddToFriendsDTO data)
         {
             var friend = db.Friends.FirstOrDefault(f => f.FriendUserID == data.friendUserID && f.UserID == CurrentUser.Id);
-            if (friend != null) return;
+            if (friend != null) return;//friend already added, return
+
             friend = new Friend { UserID = CurrentUser.Id, FriendUserID = data.friendUserID };
             db.Friends.Add(friend);
+
+            //add the relasionship from the two sides, once either of the users adds a friend to their list, both
+            //that link will appear for both usrs
+            friend = new Friend() { UserID = data.friendUserID, FriendUserID = CurrentUser.Id };
+            db.Friends.Add(friend);
+
             db.SaveChanges();
         }
 
         [HttpDelete]
         public void RemoveFriend(int friendUserID)
         {
-            var friend = (from f in db.Friends
-                          where f.UserID == CurrentUser.Id && f.FriendUserID == friendUserID
-                          select f).FirstOrDefault();
+            //when a usre decides to remove a friend, the link should be removed from both parties
+            var friends = (from f in db.Friends
+                           where f.UserID == CurrentUser.Id && f.FriendUserID == friendUserID
+                           || f.UserID == friendUserID && f.FriendUserID == CurrentUser.Id
+                           select f);
 
-            if (friend != null)
+            if (friends != null)
             {
-                db.Friends.Remove(friend);
+                db.Friends.RemoveRange(friends);
                 db.SaveChanges();
             }
         }
