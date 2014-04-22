@@ -53,14 +53,8 @@
                                             <span class="remove-friend badge pull-right" ng-click="removeFriend(friend)">Remove</span>    
                                             <span class="call-friend badge pull-right" ng-click="callFriend(friend)">Call</span>
                                         </a>
-
                                     </li>
                                 </ul>
-
-                                <div class="pager">
-                                    <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
-                                </div>
-
                             </div>
                         </div>
 
@@ -86,10 +80,6 @@
                                         </a>                                        
                                     </li>
                                 </ul>
-
-                                <div class="pager">
-                                    <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -119,12 +109,6 @@
                                         <p>{{item.message}}</p>
                                     </a>
                                 </div>
-                            </div>
-
-                            <div class="pager">
-                                <pagination total-items="chatHistoryPaginationData.totalItems" ng-model="chatHistoryPaginationData.currentPage" 
-                                    max-size="chatHistoryPaginationData.maxPageNumers" items-per-page="chatHistoryPaginationData.itemsPerPage" 
-                                    ng-change="chatHistoryPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
                             </div>
                         </div>
 
