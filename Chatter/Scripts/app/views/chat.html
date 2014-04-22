@@ -13,7 +13,7 @@
     </div>
     <div class="container">
         <!-- Example row of columns -->
-        <div class="row">
+        <div class="row" ng-show="!browserIncompatible">
             <div class="col-md-4">
 
                 <div class="friends panel panel-default">
@@ -55,8 +55,8 @@
                                         </a>
                                     </li>
                                 </ul>
+                                </div>
                             </div>
-                        </div>
 
                         <!--Non-Friends Search-->
                         <div class="friend-search" ng-show="selectedTab==2">
@@ -96,7 +96,7 @@
                         <div class="panel-heading">Chat History:
                             <label>{{activeFriend.name}}</label>
                         </div>
-
+                        
                         <div class="messages">
                             <div class="list-group">
                                 <div class="scrollable">
@@ -155,7 +155,11 @@
 
         </div>
 
-
+        <div class="row" ng-show="browserIncompatible">
+            <div class="alert alert-danger">
+                Your browser can't use the webcam or audio, please upgrade your browser to the latest version or download latest Chrome or Firefox.
+            </div>
+        </div>
 
         <hr>
 
