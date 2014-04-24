@@ -1,7 +1,7 @@
 ﻿.messages .scrollable{
     overflow:scroll;
     overflow-x:initial;
-    height:350px;    
+    height:250px;    
 }
 
 .video #my-video {
@@ -16,6 +16,16 @@
 body #toast-container > .toast-success {
     background-image:none!important;
     padding-left:15px;
+}
+
+.messages .pager {
+    padding-left: 0;
+    margin: 20px 0;
+}
+
+.messages .pagination {
+    margin: 0px 0;
+}
 }
 
 .login-buttons {
