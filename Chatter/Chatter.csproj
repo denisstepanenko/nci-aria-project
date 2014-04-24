@@ -132,6 +132,7 @@
     <Content Include="Default.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="test.html" />
     <Content Include="packages.config" />
     <EntityDeploy Include="Data\Models\ConceptualModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

@@ -31,5 +31,11 @@
 	    //    $rootScope.userInfo = {};
 	    //    $rootScope.loggedOn = false;
 	    //});
+
+	    $scope.commingSoonClick = function (e) {
+	        e.preventDefault();
+
+	        alert("Comming soon...");
+	    }
 	    
 	}]);

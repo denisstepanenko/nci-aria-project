@@ -17,3 +17,7 @@ body #toast-container > .toast-success {
     background-image:none!important;
     padding-left:15px;
 }
+
+.login-buttons {
+    text-align:center;
+}

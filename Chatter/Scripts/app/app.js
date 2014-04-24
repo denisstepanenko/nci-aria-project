@@ -1,5 +1,5 @@
 ﻿
-var chatterApp = angular.module('chatterApp', ['ngRoute', 'controllers', 'directive.googlePlusAuth']);
+var chatterApp = angular.module('chatterApp', ['ngRoute', 'controllers', 'directive.googlePlusAuth', 'directive.facebook-auth']);
 
 var controllers = angular.module('controllers', ['ui.bootstrap', 'configs']);
 var configs = angular.module('configs', []);
