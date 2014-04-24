@@ -9,7 +9,7 @@
     width: 125px;
     top: -30px;
     margin-top: -110px;
-    left: 130px;
+    left: 80px;
     border: 2px solid white;
 }
 
@@ -25,7 +25,6 @@ body #toast-container > .toast-success {
 
 .messages .pagination {
     margin: 0px 0;
-}
 }
 
 .login-buttons {
