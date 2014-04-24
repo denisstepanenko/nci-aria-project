@@ -14,7 +14,7 @@
     <div class="container">
         <!-- Example row of columns -->
         <div class="row" ng-show="!browserIncompatible">
-            <div class="col-md-4">
+            <div class="col-md-6">
 
                 <div class="friends panel panel-default">
                     <div class="">
@@ -40,6 +40,7 @@
                                     <input class="form-control" placeholder="friend@email.com, name, nickname" type="text" ng-model="myFriendSearchCriteria"  ng-trim="true" />
                                 </div>
                                 <button class="btn btn-default" ng-click="findMyFriends()">Find Friends</button>
+                                
                                 <select class="form-control" ng-model="myFriendsPaginationData.itemsPerPage">
                                     <option selected="selected" value="10">10</option>
                                     <option value="20">20</option>
@@ -55,8 +56,12 @@
                                         </a>
                                     </li>
                                 </ul>
+
+                                <div class="pager">
+                                    <pagination total-items="myFriendsPaginationData.totalItems" ng-model="myFriendsPaginationData.currentPage" max-size="myFriendsPaginationData.maxPageNumers" items-per-page="myFriendsPaginationData.itemsPerPage" ng-change="myFriendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
                                 </div>
                             </div>
+                        </div>
 
                         <!--Non-Friends Search-->
                         <div class="friend-search" ng-show="selectedTab==2">
@@ -80,54 +85,20 @@
                                         </a>                                        
                                     </li>
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
 
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-                <!--CHAT AREA-->
-
-                <div class="chat-area" ng-show="activeFriend">
-                    <div class="friends panel panel-default">
-                        <div class="panel-heading">Chat History:
-                            <label>{{activeFriend.name}}</label>
-                        </div>
-                        
-                        <div class="messages">
-                            <div class="list-group">
-                                <div class="scrollable">
-                                    <a class="list-group-item" ng-repeat="item in activeFriend.messageHistory">
-                                        <div>
-                                            <span class="badge pull-left">{{item.senderName}}</span>
-                                            <span class="badge pull-right">{{item.datePosted}}</span>
-                                        </div>
-                                        <br />
-                                        <p>{{item.message}}</p>
-                                    </a>
+                                <div class="pager">
+                                    <pagination total-items="friendsPaginationData.totalItems" ng-model="friendsPaginationData.currentPage" max-size="friendsPaginationData.maxPageNumers" items-per-page="friendsPaginationData.itemsPerPage" ng-change="friendsPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
 
-                    <div class="friends panel panel-default">
-                        <div class="panel-heading">New Message</div>
-                        <div class="new-message form-group">
-                            <textarea class="form-control validate[required]" rows="3" ng-model="textMessage"  ng-trim="true"></textarea>
-                            <button ng-click="sendTextMessage()" class="form-control btn btn-primary pull-right">Send</button>
-                        </div>
-                    </div>
                 </div>
+
             </div>
 
-            <div class="col-md-4">
-                <!--CHAT AREA-->
-
+            <div class="col-md-6">
+                <!--VIDEO CHAT AREA-->
                 <div class="chat-area" ng-show="activeFriend">
                     <div class="friends panel panel-default"> 
                         <div class="panel-heading">Video:
@@ -153,7 +124,48 @@
                         </div>
                     </div>
                 </div>
+
+                <!--CHAT AREA-->
+                <div class="chat-area" ng-show="activeFriend">
+                    <div class="friends panel panel-default">
+                        <div class="panel-heading">Chat History:
+                            <label>{{activeFriend.name}}</label>
+                        </div>
+                        
+                        <div class="messages">
+                            <div class="list-group">
+                                <div class="scrollable">
+                                    <a class="list-group-item" ng-repeat="item in activeFriend.messageHistory">
+                                        <div>
+                                            <span class="badge pull-left">{{item.senderName}}</span>
+                                            <span class="badge pull-right">{{item.datePosted}}</span>
+                                        </div>
+                                        <br />
+                                        <p>{{item.message}}</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="pager">
+                                <pagination total-items="chatHistoryPaginationData.totalItems" ng-model="chatHistoryPaginationData.currentPage" 
+                                    max-size="chatHistoryPaginationData.maxPageNumers" items-per-page="chatHistoryPaginationData.itemsPerPage" 
+                                    ng-change="chatHistoryPaginationData.pageChanged()" class="pagination-sm" boundary-links="true"></pagination>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="friends panel panel-default">
+                        <div class="panel-heading">New Message</div>
+                        <div class="new-message form-group">
+                            <textarea class="form-control validate[required]" rows="3" ng-model="textMessage"  ng-trim="true"></textarea>
+                            <button ng-click="sendTextMessage()" class="form-control btn btn-primary pull-right">Send</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
         </div>
 

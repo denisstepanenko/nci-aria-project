@@ -1,28 +1,63 @@
 ﻿
 <div class="jumbotron">
     <div class="container">
-        <h1>Login Page</h1>
+        <h1 ng-show="!loggedOn">Login</h1>
+        <h1 ng-show="loggedOn">Profile</h1>
     </div>
+
 </div>
 
 <div class="container">
     <!-- Example row of columns -->
     <div class="row">
-        <div class="col-md-6" ng-show="!loggedOn">
-            <h2>Sign In With Google</h2>
-            <div ng-app="directive.googlePlusAuth">
-                <google-plus-auth clientid="1010812378845-5p0490hr5lksssl20n2fj01plb185rpc.apps.googleusercontent.com"></google-plus-auth>
+        <div class="col-md-6 col-md-offset-3 login-buttons" ng-show="!loggedOn">
+            <div>
+                <h2>Sign In With Google</h2>
+                <div ng-app="directive.googlePlusAuth">
+                    <google-plus-auth clientid="1010812378845-5p0490hr5lksssl20n2fj01plb185rpc.apps.googleusercontent.com"></google-plus-auth>
+                </div>
+            </div>
+
+            <div>
+                <h2>OR</h2>
+                 <div>
+                    <a href="#" ng-click="commingSoonClick($event)">
+                     <img src="/Content/app/images/facebook_login.png" />
+                    </a>
+                </div>
+                <br />
+                 <div>
+                    <a href="#" ng-click="commingSoonClick($event)">
+                     <img src="/Content/app/images/twitter_login.png" />
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="col-md-6" ng-show="loggedOn">
+        <div class="col-md-6 col-md-offset-3" ng-show="loggedOn">
             <h2>You are Signed in With Google</h2>
             
             <div class="row">
                 <div class="col-md-9">
-                    <div class="row"><div class="col-md-3">Email:</div><div class="col-md-6">{{userInfo.email}}</div></div>
-                    <div class="row"><div class="col-md-3">Name:</div><div class="col-md-6">{{userInfo.name}}</div></div>
-                    <div class="row"><div class="col-md-3">Firstname:</div><div class="col-md-6">{{userInfo.given_name}}</div></div>
-                    <div class="row"><div class="col-md-3">Surname:</div><div class="col-md-6">{{userInfo.family_name}}</div></div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Email:</label></div>
+                        <div class="col-md-6">{{userInfo.email}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Name:</label></div>
+                        <div class="col-md-6">{{userInfo.name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Firstname:</label></div>
+                        <div class="col-md-6">{{userInfo.given_name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Surname:</label></div>
+                        <div class="col-md-6">{{userInfo.family_name}}</div>
+                    </div>
                     <div class="row"></div>
                     <div class="row">
                         <div class="col-md-6">

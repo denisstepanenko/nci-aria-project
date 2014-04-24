@@ -117,6 +117,20 @@ controllers.controller('ChatCtrl', ['$rootScope', '$scope', '$http', '$log', 'Ch
                     
 	        $(function () {
 	            initializeBrowserVideo();
+
+	            //resize video boxes as the browser size is changing
+	            $(window).on("resize", function () {
+	                var theirWidth = $("#their-video").width();
+	                if (theirWidth != 100) {
+	                    //initial width is 100
+
+	                    var myWidth=$("#my-video").width();
+                        
+	                    $("#my-video").width(theirWidth / 4.15);
+	                    $("#my-video").offset({ left: $("#their-video").offset().left + theirWidth - myWidth - 10 });
+	                }
+
+	            });
 	        });
 
 	        initSignalR();

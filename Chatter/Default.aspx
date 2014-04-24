@@ -61,12 +61,14 @@
     <script src="/Scripts/ui-bootstrap-tpls-0.10.0.min.js"></script>
     <script src="/Scripts/pagination.js"></script>
     <script src="/Scripts/app/app.js"></script>
-    <script src="Scripts/app/config/config.chatter.js"></script>
+    <script src="/Scripts/app/config/config.chatter.js"></script>
     <script src="/Scripts/app/controllers/ctrl.home.js"></script>
     <script src="/Scripts/app/controllers/ctrl.login.js"></script>
     <script src="/Scripts/app/controllers/ctrl.chat.js"></script>
     <script src="/Scripts/app/controllers/ctrl.demo.js"></script>
     <script src="/Scripts/app/directives/google-plus-auth.js"></script>
+    <script src="/Scripts/app/directives/facebook-auth.js"></script>
+    <script src="/Scripts/app/directives/linkedin-auth.js"></script>
     <script src="/Scripts/toastr.min.js"></script>
     <link href="/Content/toastr.min.css" rel="stylesheet" />
 </body>
